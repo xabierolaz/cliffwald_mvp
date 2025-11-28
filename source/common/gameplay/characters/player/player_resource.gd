@@ -19,16 +19,17 @@ const BASE_STATS: Dictionary[StringName, float] = {
 
 @export var display_name: String = "Player"
 @export var skin_id: int = 1 # Default skin
+@export var house: StringName = &""
 
 @export var golds: int
 @export var inventory: Dictionary
 
-@export var attributes: Dictionary[StringName, int]
-@export var available_attributes_points: int
+@export var attributes: Dictionary
+@export var available_attributes_points: int = 0
+# Nivel fijo; no hay progresión RPG tradicional.
+@export var level: int = 1
 
-@export var level: int
-
-@export var guild: Guild
+@export var club: Club
 ##
 @export var server_roles: Dictionary
 
@@ -51,5 +52,5 @@ func init(
 
 
 func level_up() -> void:
-	available_attributes_points += ATTRIBUTE_POINTS_PER_LEVEL
-	level += 1
+	# Sin progresión de nivel en este diseño.
+	pass

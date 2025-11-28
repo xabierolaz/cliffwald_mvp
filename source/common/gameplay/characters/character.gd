@@ -1,7 +1,6 @@
 @icon("res://assets/node_icons/blue/icon_character.png")
 class_name Character
-extends Entity
-
+extends CharacterBody3D
 
 enum Animations {
 	IDLE,
@@ -17,60 +16,64 @@ var skin_id: int:
 var anim: Animations = Animations.IDLE:
 	set = _set_anim
 
-var flipped: bool = false:
-	set = _set_flip
-
 var pivot: float = 0.0:
 	set = _set_pivot
 
-@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@onready var hand_offset: Node2D = $HandOffset
-@onready var hand_pivot: Node2D = $HandOffset/HandPivot
+var hand_offset: Node3D
+var hand_pivot: Node3D
 
-@onready var right_hand_spot: Node2D = $HandOffset/HandPivot/RightHandSpot
-@onready var left_hand_spot: Node2D = $HandOffset/HandPivot/LeftHandSpot
+var right_hand_spot: Node3D
+var left_hand_spot: Node3D
 
-@onready var state_synchronizer: StateSynchronizer = $StateSynchronizer
-@onready var ability_system_component: AbilitySystemComponent = $AbilitySystemComponent
-@onready var equipment_component: EquipmentComponent = $EquipmentComponent
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
-@onready var animation_tree: AnimationTree = $AnimationTree
-@onready var locomotion_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/OnFoot/LocomotionSM/playback")
-@onready var weapon_state_machine: AnimationNodeStateMachinePlayback = animation_tree.get("parameters/OnFoot/WeaponSM/playback")
+var state_synchronizer: StateSynchronizer
+var ability_system_component: AbilitySystemComponent
+var equipment_component: EquipmentComponent
+var animation_player: AnimationPlayer
+var animation_tree: AnimationTree
+var locomotion_state_machine: AnimationNodeStateMachinePlayback
 
 
 func _ready() -> void:
+	# Resolve nodes defensively; some optional nodes are not present in the 3D placeholder scene.
+	hand_offset = get_node_or_null("HandOffset")
+	hand_pivot = hand_offset.get_node_or_null("HandPivot") if hand_offset else null
+	right_hand_spot = hand_pivot.get_node_or_null("RightHandSpot") if hand_pivot else null
+	left_hand_spot = hand_pivot.get_node_or_null("LeftHandSpot") if hand_pivot else null
+
+	state_synchronizer = get_node_or_null("StateSynchronizer")
+	ability_system_component = get_node_or_null("AbilitySystemComponent")
+	equipment_component = get_node_or_null("EquipmentComponent")
+	animation_player = get_node_or_null("AnimationPlayer")
+	animation_tree = get_node_or_null("AnimationTree")
+	if animation_tree:
+		locomotion_state_machine = animation_tree.get("parameters/OnFoot/LocomotionSM/playback")
+
 	if multiplayer.is_server():
 		return
-	ability_system_component.attributes.connect_watcher(Stat.HEALTH,
-		func(value: float) -> void:
-			$ProgressBar.value = value
-	)
-	ability_system_component.attributes.connect_watcher(Stat.HEALTH_MAX,
-		func(value: float) -> void:
-			$ProgressBar.max_value = value
-	)
 	
-
-
-func update_weapon_animation(state: String) -> void:
-	pass
-	#$AnimationTree.set("parameters/OnFoot/Blend2/blend_amount", 1.0)
-	#equipped_weapon_right.play_animation(state)
-	#equipped_weapon_left.play_animation(state)
-
+	if ability_system_component and ability_system_component.attributes:
+		# Hook stat watchers only if the component exists.
+		ability_system_component.attributes.connect_watcher(Stat.HEALTH,
+			func(_value: float) -> void:
+				pass # UI Logic Placeholder
+		)
+		# Se corrigió la indentación aquí:
+		ability_system_component.attributes.connect_watcher(Stat.HEALTH_MAX,
+			func(_value: float) -> void:
+				pass # UI Logic Placeholder
+		)
 
 func _set_skin_id(id: int) -> void:
 	skin_id = id
-	# Avoid uncessary load on server
 	if multiplayer.is_server():
 		return
-	var sprite_frames: SpriteFrames = ContentRegistryHub.load_by_id(&"sprites", id) as SpriteFrames
-	if sprite_frames:
-		animated_sprite.sprite_frames = sprite_frames
-
+	# Lógica visual desactivada temporalmente para la migración
+	pass
 
 func _set_anim(new_anim: Animations) -> void:
+	if locomotion_state_machine == null:
+		anim = new_anim
+		return
 	match new_anim:
 		Animations.IDLE:
 			locomotion_state_machine.travel(&"locomotion_idle")
@@ -80,13 +83,17 @@ func _set_anim(new_anim: Animations) -> void:
 			locomotion_state_machine[&"parameters/OnFoot/InteruptShot/request"] = AnimationNodeOneShot.ONE_SHOT_REQUEST_FIRE
 	anim = new_anim
 
-
-func _set_flip(new_flip: bool) -> void:
-	animated_sprite.flip_h = new_flip
-	hand_offset.scale.x = -1 if new_flip else 1
-	flipped = new_flip
-
-
 func _set_pivot(new_pivot: float) -> void:
 	pivot = new_pivot
-	hand_pivot.rotation = new_pivot
+	if hand_pivot:
+		hand_pivot.rotation.y = new_pivot
+
+
+# Rotate character on the Y axis instead of 2D-style flipping.
+func face_direction(direction: Vector3) -> void:
+	if direction.length() < 0.001:
+		return
+	var yaw: float = atan2(direction.x, direction.z)
+	rotation.y = yaw
+	if hand_pivot:
+		hand_pivot.rotation.y = yaw

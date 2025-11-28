@@ -4,7 +4,7 @@ extends Resource
 
 @export var tags: PackedStringArray = []
 
-var magnitudes: Dictionary[StringName, float] = {}
+var magnitudes: Dictionary = {}
 var ignore_layers: PackedStringArray = []
 var meta: Dictionary = {}
 

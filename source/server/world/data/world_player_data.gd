@@ -10,15 +10,15 @@ extends Resource
 ## [codeblock]
 ## print(accounts) # {"horizon": [6, 14], "another_guy": [2]}
 ## [/codeblock]
-@export var accounts: Dictionary[String, PackedInt32Array]
+@export var accounts: Dictionary
 @export var max_character_per_account: int = 3
 
-@export var players: Dictionary[int, PlayerResource]
+@export var players: Dictionary
 @export var next_player_id: int = 0
 
 @export var admin_ids: PackedInt32Array
-@export var user_roles: Dictionary[int, Array]
-@export var guilds: Dictionary[String, Guild]
+@export var user_roles: Dictionary
+@export var clubs: Dictionary
 
 
 func get_player_resource(player_id: int) -> PlayerResource:
@@ -39,16 +39,17 @@ func create_player_character(username: String, character_data: Dictionary) -> in
 	var player_character := PlayerResource.new()
 	
 	# Temporary for fast test
-	player_character.inventory = {
-		1: {"stack": 1}, 2: {"stack": 1}, 3: {"stack": 1}, 4: {"stack": 1}, 5: {"stack": 1}
-	}
+	# No hay armas ni consumibles preasignados; los alumnos ya llevan su varita estética.
+	player_character.inventory = {}
 	
-	player_character.available_attributes_points = 10
+	player_character.available_attributes_points = 0
 	
 	player_character.init(
 		player_id, username,
-		character_data["name"], character_data["skin"]
+		character_data.get("name", player_character.display_name),
+		character_data.get("skin", 1)
 	)
+	player_character.house = character_data.get("house", &"Ignis")
 	players[player_id] = player_character
 	if accounts.has(username):
 		accounts[username].append(player_id)
@@ -67,19 +68,18 @@ func get_account_characters(account_name: String) -> Dictionary:
 				data[player_id] = {
 					"name": player_character.display_name,
 					"skin": player_character.skin_id,
-					"class": "???",
-					"level": player_character.level
+					"class": "Student",
 				}
 	return data
 
 
-func create_guild(guild_name: String, player_id: int) -> bool:
+func create_club(club_name: String, player_id: int) -> bool:
 	var player: PlayerResource = players.get(player_id)
-	if not player or guilds.has(guild_name):
+	if not player or clubs.has(club_name):
 		return false
-	var new_guild: Guild = Guild.new()
-	new_guild.leader_id = player_id
-	new_guild.guild_name = guild_name
-	new_guild.add_member(player_id, "Leader")
-	guilds[guild_name] = new_guild
+	var new_club: Club = Club.new()
+	new_club.leader_id = player_id
+	new_club.club_name = club_name
+	new_club.add_member(player_id, "Leader")
+	clubs[club_name] = new_club
 	return true

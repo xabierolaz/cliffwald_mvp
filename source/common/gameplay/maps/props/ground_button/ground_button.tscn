@@ -30,16 +30,16 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_uru4r"]
-size = Vector2(16, 16)
+[sub_resource type="BoxShape3D" id="BoxShape3D_uru4r"]
+size = Vector3(0.5, 0.2, 0.5)
 
-[node name="GroundButton" type="Area2D"]
+[node name="GroundButton" type="Area3D"]
 script = ExtResource("1_tgw3s")
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 texture_filter = 1
 sprite_frames = SubResource("SpriteFrames_aa61n")
 animation = &"pressed"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_uru4r")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_uru4r")

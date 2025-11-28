@@ -126,24 +126,26 @@ animations = [{
 "speed": 5.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_6bec3"]
-size = Vector2(9, 9)
+[sub_resource type="BoxShape3D" id="BoxShape3D_6bec3"]
+size = Vector3(0.5, 0.5, 0.5)
 
-[node name="Coin" type="Area2D"]
+[node name="Coin" type="Area3D"]
 collision_layer = 4
 monitorable = false
 script = ExtResource("1_73yf6")
 metadata/_edit_group_ = true
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="."]
 texture_filter = 1
 rotation = -0.000431468
 sprite_frames = SubResource("SpriteFrames_v5ur3")
 animation = &"blue_coin"
+billboard = 1
+texture_filter = 0
 speed_scale = 2.0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_6bec3")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_6bec3")
 
 [node name="StateSynchronizer" type="Node" parent="." node_paths=PackedStringArray("root_node")]
 script = ExtResource("4_7newa")

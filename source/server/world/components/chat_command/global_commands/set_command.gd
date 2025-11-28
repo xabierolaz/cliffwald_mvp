@@ -18,7 +18,7 @@ func execute(args: PackedStringArray, peer_id: int, server_instance: ServerInsta
 	if path.is_empty() or not value:
 		return "Invalid command format: /set <target> <path> <value>"
 	
-	var player: Player = server_instance.get_player(peer_id)
+	var player: Node = server_instance.get_player(peer_id)
 	if not player:
 		return "Target not found."
 	

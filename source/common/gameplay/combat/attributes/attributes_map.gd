@@ -47,8 +47,8 @@ const AGILITY: Dictionary[StringName, float] = {
 	Stat.ATTACK_SPEED: 0.1
 }
 
-static func attr_to_stats(attributes: Dictionary[StringName, int]) -> Dictionary[StringName, float]:
-	var stats: Dictionary[StringName, float]
+static func attr_to_stats(attributes: Dictionary) -> Dictionary[StringName, float]:
+	var stats: Dictionary[StringName, float] = {}
 	for attribute_name: StringName in attributes:
 		var amount: int = attributes[attribute_name]
 		match attribute_name:

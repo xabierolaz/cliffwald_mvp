@@ -11,7 +11,7 @@ var charged_instances: Array[ServerInstance]
 
 
 @warning_ignore("unused_parameter")
-func can_join_instance(player: Player, index: int = -1) -> bool:
+func can_join_instance(player: Node, index: int = -1) -> bool:
 	return true
 
 

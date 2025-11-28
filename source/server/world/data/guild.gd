@@ -1,11 +1,11 @@
-class_name Guild
+class_name Club
 extends Resource
 
 
-@export var guild_name: String
+@export var club_name: String
 @export var leader_id: int
 ## player_id: rank_name
-@export var members: Dictionary[int, String]
+@export var members: Dictionary
 
 
 func add_member(player_id: int, rank: String) -> void:

@@ -1,6 +1,5 @@
 class_name Wire
 
-
 enum Type {
 	VARIANT,
 	BOOL,
@@ -10,11 +9,7 @@ enum Type {
 	STR_UTF8_U16, STR_UTF8_U32,
 	STR_ASCII_U16, STR_ASCII_U32,
 	BYTES_U16, BYTES_U32,
-	VEC2_F32
+	VEC2_F32,
+	VEC3_F32, # Nuevo para 3D
+	QUAT_F32  # Nuevo para Rotaciones
 }
-
-# U / Unsigned byte
-# S / Signed byte
-# put_double / f64 / 64 bits
-# put_float / f32 / 32 bits / float, single precision
-# put_half / f16 / 16 bits/ half, half precision

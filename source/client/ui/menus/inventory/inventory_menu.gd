@@ -97,21 +97,15 @@ func _on_item_slot_button_pressed(inventory_slot: InventorySlot) -> void:
 	item_preview_icon.texture = inventory_slot.item.item_icon
 	item_description.text = inventory_slot.item.description
 	
-	if inventory_slot.item is GearItem:
-		item_action_button.text = "Equip"
-	elif inventory_slot.item is ConsumableItem:
-		item_action_button.text = "Use"
-	else:
-		item_action_button.text = "Close"
+	# Actions are disabled in the current MVP; just show info.
+	item_action_button.text = "Not available"
+	item_action_button.disabled = true
 	
 	selected_item = inventory_slot.item
 	
 	item_info.gui_input.connect(_on_item_info_gui_input)
 	
-	if selected_item is WeaponItem or selected_item is ConsumableItem:
-		$ItemInfo/PanelContainer/VBoxContainer/HBoxContainer/HotkeyButton.show()
-	else:
-		$ItemInfo/PanelContainer/VBoxContainer/HBoxContainer/HotkeyButton.hide()
+	$ItemInfo/PanelContainer/VBoxContainer/HBoxContainer/HotkeyButton.hide()
 	item_info.show()
 
 
@@ -123,17 +117,7 @@ func _on_item_info_gui_input(event: InputEvent) -> void:
 
 
 func _on_item_action_button_pressed() -> void:
-	if selected_item is GearItem or selected_item is WeaponItem:
-		var item_id: int = selected_item.get_meta(&"id", -1)
-		if item_id != -1:
-			InstanceClient.current.request_data(
-				&"item.equip",
-				Callable(),
-				{"id": item_id}
-			)
-			for equipment_slot: GearSlotButton in equipment_slots.get_children():
-				if selected_item.slot == equipment_slot.gear_slot:
-					equipment_slot.icon = selected_item.item_icon
+	# Disabled: server-side equip/use not implemented.
 	item_info.gui_input.disconnect(_on_item_info_gui_input)
 	item_info.hide()
 
@@ -153,20 +137,8 @@ class InventorySlot:
 
 var connect_hotkey_once: bool = false
 func _on_hotkey_button_pressed() -> void:
-	var hotkey_index: int = 0
-	
-	for button: Button in quick_slots_container.get_children():
-		if ClientState.quick_slots.data.has(hotkey_index):
-			button.icon = (ClientState.quick_slots.get_key(hotkey_index, null) as Item).item_icon
-			button.text = ""
-		if not connect_hotkey_once:
-			if hotkey_index < 2:
-				button.pressed.connect(_on_hotkey_index_pressed.bind(hotkey_index))
-			else:
-				button.text = "Lock"
-		hotkey_index += 1
-	connect_hotkey_once = true
-	$ItemInfo/HotkeyPanel.show()
+	# Hotkeys disabled in current MVP.
+	$ItemInfo/HotkeyPanel.hide()
 
 
 func _on_hotkey_index_pressed(hotkey_index: int) -> void:

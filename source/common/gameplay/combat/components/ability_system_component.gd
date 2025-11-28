@@ -9,8 +9,8 @@ var modifiers: Array[StatModifier]
 var attributes: Attributes = Attributes.new()
 
 class Attributes:
-	var attributes: Dictionary[StringName, float]
-	var watchers: Dictionary[StringName, Array]
+	var attributes: Dictionary
+	var watchers: Dictionary
 	
 	
 	func _set(property: StringName, value: Variant) -> bool:

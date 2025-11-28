@@ -7,10 +7,10 @@ func data_request_handler(
 	args: Dictionary
 ) -> Dictionary:
 	var player_resource: PlayerResource = instance.world_server.connected_players.get(peer_id, null)
-	if not player_resource or not player_resource.guild:
+	if not player_resource or not player_resource.club:
 		return {}
 	
-	player_resource.guild.remove_member(player_resource.player_id)
-	player_resource.guild = null
+	player_resource.club.remove_member(player_resource.player_id)
+	player_resource.club = null
 	
 	return {}

@@ -6,30 +6,30 @@ func data_request_handler(
 	instance: ServerInstance,
 	args: Dictionary
 ) -> Dictionary:
-	var guild_name: String = args.get("name", "")
+	var club_name: String = args.get("name", "")
 	var player_resource: PlayerResource = instance.world_server.connected_players.get(peer_id, null)
 	
-	if guild_name.is_empty() or not player_resource:
+	if club_name.is_empty() or not player_resource:
 		return {}
 	
-	var guild_created: bool = instance.world_server.database.player_data.create_guild(
-		guild_name, player_resource.player_id
+	var club_created: bool = instance.world_server.database.player_data.create_club(
+		club_name, player_resource.player_id
 	)
-	if not guild_created:
+	if not club_created:
 		return {}
 	
-	var guild: Guild = instance.world_server.database.player_data.guilds.get(guild_name)
-	if not guild:
+	var club: Club = instance.world_server.database.player_data.clubs.get(club_name)
+	if not club:
 		return {}
 	
-	guild.add_member(player_resource.player_id, "Leader")
-	guild.leader_id = player_resource.player_id
+	club.add_member(player_resource.player_id, "Leader")
+	club.leader_id = player_resource.player_id
 	
-	player_resource.guild = guild
+	player_resource.club = club
 	
-	var guild_info: Dictionary = {
-		"name": guild.guild_name,
-		"size": guild.members.size(),
-		"is_in_guild": true,
+	var club_info: Dictionary = {
+		"name": club.club_name,
+		"size": club.members.size(),
+		"is_in_club": true,
 	}
-	return guild_info
+	return club_info

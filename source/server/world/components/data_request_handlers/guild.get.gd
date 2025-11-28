@@ -9,8 +9,8 @@ func data_request_handler(
 	var to_get: String = args.get("q", "")
 	if to_get.is_empty():
 		return {}
-	var guild: Guild = instance.world_server.database.player_data.guilds.get(to_get)
-	var guild_info: Dictionary
-	if guild:
-		guild_info = {"name": guild.guild_name, "size": guild.members.size()}
-	return guild_info
+	var club: Club = instance.world_server.database.player_data.clubs.get(to_get)
+	var club_info: Dictionary
+	if club:
+		club_info = {"name": club.club_name, "size": club.members.size()}
+	return club_info

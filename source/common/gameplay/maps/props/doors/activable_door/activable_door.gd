@@ -1,10 +1,10 @@
-extends StaticBody2D
+extends StaticBody3D
 
 
 @export var door_id: int = 0
 
-@onready var door_anim: AnimatedSprite2D = $AnimatedSprite2D
-@onready var door_collision: CollisionShape2D = $CollisionShape2D
+@onready var door_anim: AnimatedSprite3D = $AnimatedSprite3D
+@onready var door_collision: CollisionShape3D = $CollisionShape3D
 
 
 func _ready() -> void:

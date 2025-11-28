@@ -1,12 +1,16 @@
 [gd_scene load_steps=3 format=3 uid="uid://b2ckixon7ryh6"]
 
-[ext_resource type="Script" uid="uid://cloyd4stl0hfe" path="res://source/common/gameplay/maps/components/interaction_areas/warper/warper.gd" id="1_w00al"]
+[ext_resource type="Script" path="res://source/common/gameplay/maps/components/interaction_areas/warper/warper.gd" id="1_w00al"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_5fu4t"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_trigger"]
+size = Vector3(2, 2, 2)
 
-[node name="Warper" type="Area2D"]
+[node name="Warper" type="Area3D"]
+collision_layer = 8
+collision_mask = 2
 monitorable = false
 script = ExtResource("1_w00al")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("RectangleShape2D_5fu4t")
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_trigger")

@@ -9,17 +9,17 @@ extends Item
 @export var base_modifiers: Array[StatModifier]
 
 
-func can_equip(player: Player) -> bool:
+func can_equip(player: Node) -> bool:
 	if player.player_resource:
 		return slot.is_unlocked_for(player.player_resource) and player.player_resource.level >= required_level
 	return false
 
 
-func on_equip(character: Character) -> void:
+func on_equip(character: Node) -> void:
 	for modifier: StatModifier in base_modifiers:
 		character.ability_system_component.add_modifier(modifier)
 
 
-func on_unequip(character: Character) -> void:
+func on_unequip(character: Node) -> void:
 	for modifier: StatModifier in base_modifiers:
 		character.ability_system_component.remove_modifier_by_id(modifier.runtime_id)

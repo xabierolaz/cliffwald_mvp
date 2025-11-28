@@ -1,56 +1,21 @@
 @tool
-@icon("res://assets/node_icons/blue/icon_flag.png")
 extends InteractionArea
 class_name Teleporter
-## Used to teleport from a point A to a point B inside the same instance.
-## To change instance, use a Warper instead.
 
 @export var one_way: bool = false
-@export var target: Teleporter:
+@export var target: Teleporter
+
+# [3D FIX] Usar Vector3 en lugar de Vector2
+@export var size: Vector3 = Vector3(1, 1, 1):
 	set(value):
-		# Needs rework.
-		if value == target:
-			return
-		if value == null:
-			if target:
-				if not one_way:
-					value = target
-					target = null
-					value.target = null
-				target = null
-		else:
-			if value == self:
-				value = null
-				if target:
-					if not one_way:
-						target.target = null
-					target = null
-				push_warning("Impossible to assign a teleporter to itself.")
-			target = value
-			if target:
-				if not one_way:
-					target.target = self
-		queue_redraw()
-		update_configuration_warnings()
+		size = value
+		_update_shape()
 
+func _ready():
+	super._init() # Configurar capas de colisión desde la clase base
+	_update_shape()
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_TRANSFORM_CHANGED:
-		if target:
-			target.queue_redraw()
-		queue_redraw()
-
-
-func _get_configuration_warnings() -> PackedStringArray:
-	if target == null:
-		return PackedStringArray([
-			"This teleporter has no target!",
-			"Consider adding one in the inspector tab."
-		])
-	return []
-
-
-func _draw() -> void:
-	if Engine.is_editor_hint():
-		if target:
-			draw_line(Vector2.ZERO, to_local(target.global_position), Color.RED, 1, true)
+func _update_shape():
+	var col = get_node_or_null("CollisionShape3D")
+	if col and col.shape is BoxShape3D:
+		col.shape.size = size

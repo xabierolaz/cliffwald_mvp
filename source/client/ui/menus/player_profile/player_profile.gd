@@ -6,10 +6,13 @@ var cache: Dictionary[int, Dictionary]
 @onready var name_label: Label = $PanelContainer/HBoxContainer/VBoxContainer2/Label
 @onready var stats_text: RichTextLabel = $PanelContainer/HBoxContainer/StatsContainer/RichTextLabel
 @onready var description_text: RichTextLabel = $PanelContainer/HBoxContainer/VBoxContainer2/RichTextLabel
-@onready var player_character: AnimatedSprite2D = $PanelContainer/HBoxContainer/VBoxContainer2/Control/Control/AnimatedSprite2D
+@onready var profile_viewport: SubViewport = $PanelContainer/HBoxContainer/VBoxContainer2/Control/Control/ProfileViewportContainer/SubViewport
+@onready var preview_root: Node3D = $PanelContainer/HBoxContainer/VBoxContainer2/Control/Control/ProfileViewportContainer/SubViewport/PreviewRoot
 
 @onready var message_button: Button = $PanelContainer/HBoxContainer/VBoxContainer/MessageButton
 @onready var friend_button: Button = $PanelContainer/HBoxContainer/VBoxContainer/FriendButton
+
+var preview_instance: Node3D
 
 
 func open_player_profile(player_id: int) -> void:
@@ -59,14 +62,37 @@ func add_stats(stats: Dictionary):
 
 
 func set_player_character(skin_id: int, animation: String) -> void:
-	var skin: SpriteFrames = ContentRegistryHub.load_by_id(&"sprites", skin_id)
-	if not skin:
+	if not preview_root:
 		return
-	
-	player_character.stop()
-	player_character.sprite_frames = skin
-	if player_character.sprite_frames.has_animation(animation):
-		player_character.play(animation)
+
+	if preview_instance and is_instance_valid(preview_instance):
+		preview_instance.queue_free()
+
+	var character_scene: PackedScene = load("res://source/common/gameplay/characters/character.tscn")
+	if not character_scene:
+		return
+
+	preview_instance = character_scene.instantiate() as Node3D
+	if not preview_instance:
+		return
+
+	# Keep the preview static; disable heavy processing if present.
+	if preview_instance.has_method("set_process"):
+		preview_instance.set_process(false)
+	if preview_instance.has_method("set_physics_process"):
+		preview_instance.set_physics_process(false)
+
+	preview_instance.global_position = Vector3.ZERO
+	preview_instance.rotation.y = PI
+	preview_root.add_child(preview_instance)
+
+	var anim_player: AnimationPlayer = preview_instance.find_child("AnimationPlayer", true, false)
+	if anim_player:
+		if animation != "" and anim_player.has_animation(animation):
+			anim_player.play(animation)
+		elif anim_player.has_animation("idle"):
+			anim_player.play("idle")
+
 
 
 func _on_close_pressed() -> void:

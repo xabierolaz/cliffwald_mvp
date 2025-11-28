@@ -6,6 +6,7 @@ var world_info: Dictionary
 
 
 func _ready() -> void:
+	print("WorldMain: _ready start")
 	# Server tick rate
 	# For comparaison:
 	# Eve Online - 1 tick par second.
@@ -17,7 +18,7 @@ func _ready() -> void:
 	
 	if DisplayServer.get_name() != "headless":
 		DisplayServer.window_set_title("World Server")
-	
+		
 	# Default config path. to use another one, override this;
 	# or write --config=config_file_path.cfg as a launch argument.
 	world_info = ConfigFileUtils.load_section_with_defaults(
@@ -30,13 +31,24 @@ func _ready() -> void:
 			"motd": "Welcome!",
 			"bonus_xp": 0.0,
 			"max_character": 5,
-			"pvp": true
+			"pvp": true,
+			"dev_insecure_auth": false,
+			"dev_skip_master": false
 		}
 		
 	)
 	if world_info.has("error"):
 		printerr("World server loading configuration failed.")
 	else:
+		print("WorldMain: start_database")
 		$Database.start_database(world_info)
-		$WorldManagerClient.start_client_to_master_server(world_info)
+		var skip_master: bool = world_info.get("dev_skip_master", false)
+		if skip_master:
+			print("🔌 DEV: saltando conexión con Master Server (dev_skip_master=true).")
+			$WorldServer.world_manager = null
+		else:
+			print("WorldMain: conectando a Master")
+			$WorldManagerClient.start_client_to_master_server(world_info)
+			$WorldServer.world_manager = $WorldManagerClient
+		print("WorldMain: arrancando WorldServer")
 		$WorldServer.start_world_server()

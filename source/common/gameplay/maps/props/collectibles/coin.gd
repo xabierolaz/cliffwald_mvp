@@ -1,9 +1,9 @@
-extends Area2D
+extends Area3D
 
 
 @export_enum("blue", "gold") var coin_type: String = "blue"
 
-@onready var coin_anim: AnimatedSprite2D = $AnimatedSprite2D
+@onready var coin_anim: AnimatedSprite3D = $AnimatedSprite3D
 
 var collected: bool = false
 
@@ -14,8 +14,8 @@ func _ready() -> void:
 		body_entered.connect(_on_body_entered)
 
 
-func _on_body_entered(body: Node2D) -> void:
-	if not body is Player or collected:
+func _on_body_entered(body: Node3D) -> void:
+	if not body is CharacterBody3D or collected:
 		return
 	# To be sure it's called once.
 	collected = true
@@ -64,13 +64,13 @@ func rp_collect(delete: bool) -> void:
 
 func rp_pause() -> void:
 	hide()
-	$CollisionShape2D.set_deferred(&"disabled", true)
+	$CollisionShape3D.set_deferred(&"disabled", true)
 	set_deferred(&"monitoring", false)
 
 
 func rp_unpause() -> void:
 	coin_anim.play(coin_type + "_coin")
-	$CollisionShape2D.set_deferred(&"disabled", false)
+	$CollisionShape3D.set_deferred(&"disabled", false)
 	set_deferred(&"monitoring", true)
 	show()
 	collected = false

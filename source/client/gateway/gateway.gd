@@ -1,7 +1,6 @@
-extends Control#can be refactor, 350 lines script too much?
+extends Control
 
-
-# Helper class
+# Helper classes
 const CredentialsUtils = preload("res://source/common/utils/credentials_utils.gd")
 const GatewayApi = preload("res://source/common/network/gateway_api.gd")
 
@@ -12,55 +11,51 @@ var account_name: String
 var token: int = randi()
 
 var current_world_id: int
-var selected_skin_id: int
+var selected_house: StringName = &"Ignis"
+var worlds: Dictionary
 
-var menu_stack: Array[Control]
+# UI references (nueva escena simplificada)
+@onready var tabs: TabContainer = $Center/Panel/VBox/Tabs
+@onready var login_user: LineEdit = $Center/Panel/VBox/Tabs/Login/LoginVBox/UserEdit
+@onready var login_pass: LineEdit = $Center/Panel/VBox/Tabs/Login/LoginVBox/PassEdit
+@onready var login_button: Button = $Center/Panel/VBox/Tabs/Login/LoginVBox/LoginButton
+@onready var guest_button: Button = $Center/Panel/VBox/Tabs/Login/LoginVBox/GuestButton
+@onready var create_user: LineEdit = $Center/Panel/VBox/Tabs/CreateAccount/CreateVBox/NewUserEdit
+@onready var create_pass: LineEdit = $Center/Panel/VBox/Tabs/CreateAccount/CreateVBox/NewPassEdit
+@onready var create_pass_repeat: LineEdit = $Center/Panel/VBox/Tabs/CreateAccount/CreateVBox/RepeatEdit
+@onready var create_account_button: Button = $Center/Panel/VBox/Tabs/CreateAccount/CreateVBox/CreateButton
+@onready var char_name: LineEdit = $Center/Panel/VBox/Tabs/CharacterCreation/CharVBox/NameEdit
+@onready var house_options: OptionButton = $Center/Panel/VBox/Tabs/CharacterCreation/CharVBox/HouseOptions
+@onready var create_char_button: Button = $Center/Panel/VBox/Tabs/CharacterCreation/CharVBox/CreateCharButton
+@onready var back_button: Button = $Center/Panel/VBox/BackButton
 
-@onready var main_panel: PanelContainer = $MainPanel
-@onready var login_panel: PanelContainer = $LoginPanel
-@onready var popup_panel: PanelContainer = $PopupPanel
-
-@onready var back_button: Button = $BackButton
-
-@onready var http_request: HTTPRequest = $HTTPRequest
+var http_request: HTTPRequest
 
 
 func _ready() -> void:
-	$SwapButton.toggled.connect(func(toggled_on: bool):
-		if not $AudioStreamPlayer.playing:
-			$AudioStreamPlayer.play()
-		$Desert.visible = toggled_on == true
-		$FairyForest.visible = toggled_on == false
-		if toggled_on:
-			BetterThemeDB.theme = load("res://source/client/ui/themes/theme_desert.tres")
-		else:
-			BetterThemeDB.theme = preload("res://source/client/ui/themes/theme_navy.tres")
-		theme = BetterThemeDB.theme
-	)
-	menu_stack.append(main_panel)
-	back_button.hide()
+	http_request = HTTPRequest.new()
+	add_child(http_request)
+
+	# Conexión de botones
+	login_button.pressed.connect(_on_login_login_button_pressed)
+	guest_button.pressed.connect(_on_guest_button_pressed)
+	create_account_button.pressed.connect(_on_create_account_button_pressed)
+	create_char_button.pressed.connect(_on_create_character_button_pressed)
 	back_button.pressed.connect(func():
-		if menu_stack.size():
-			menu_stack.pop_back().hide()
-			if menu_stack.size():
-				menu_stack.back().show()
-			if menu_stack.size() < 2:
-				back_button.hide()
-		)
-	
-	var animated_sprite_2d: AnimatedSprite2D = $CharacterCreation/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer2/CenterContainer/Control/AnimatedSprite2D
-	animated_sprite_2d.play(&"run")
-	var v_box_container: GridContainer = $CharacterCreation/VBoxContainer/VBoxContainer/HBoxContainer/VBoxContainer/VBoxContainer
-	for button: Button in v_box_container.get_children():
-		button.pressed.connect(
-		func():
-			var sprite: SpriteFrames = ContentRegistryHub.load_by_slug(&"sprites", button.text.to_lower()) as SpriteFrames
-			if not sprite:
-				return
-			selected_skin_id =  ContentRegistryHub.id_from_slug(&"sprites", button.text.to_lower())
-			animated_sprite_2d.sprite_frames = sprite
-			animated_sprite_2d.play(&"run")
-		)
+		tabs.current_tab = 0
+		back_button.hide()
+	)
+	back_button.hide()
+
+	# Selección de casa (doctrina)
+	house_options.clear()
+	house_options.add_item("Ignis")
+	house_options.add_item("Axiom")
+	house_options.add_item("Vesper")
+	house_options.select(0)
+	house_options.item_selected.connect(func(idx: int):
+		selected_house = house_options.get_item_text(idx)
+	)
 
 
 func do_request(
@@ -68,8 +63,13 @@ func do_request(
 	path: String,
 	payload: Dictionary,
 ) -> Dictionary:
-	if http_request.get_http_client_status() == HTTPClient.Status.STATUS_CONNECTED:
-		return {"error": "request_error"}
+	# Si ya hay una petición en curso, espera a que termine (con timeout).
+	var start_ms := Time.get_ticks_msec()
+	while http_request.get_http_client_status() != HTTPClient.Status.STATUS_DISCONNECTED:
+		if Time.get_ticks_msec() - start_ms > 10000:
+			http_request.cancel_request()
+			return {ok=false, error="timeout_wait_previous"}
+		await get_tree().process_frame
 	
 	var custom_headers: PackedStringArray
 	custom_headers.append("Content-Type: application/json")
@@ -88,8 +88,7 @@ func do_request(
 	var args: Array = await http_request.request_completed
 	var result: int = args[0]
 	if result != OK:
-		print("ERROR?, TIMEOUT?")
-		return {"error": 1, "ERROR?": "TIMEOUT?"}
+		return {"error": "request_failed", "code": result}
 	
 	var response_code: int = args[1]
 	var headers: PackedStringArray = args[2]
@@ -101,122 +100,47 @@ func do_request(
 	return {"error": 1}
 
 
-func _show(next: Control, can_back: bool = true) -> void:
-	if menu_stack.size():
-		menu_stack.back().hide()
-	if not can_back:
-		menu_stack.clear()
-	next.show()
-	menu_stack.append(next)
-	back_button.visible = can_back
+func populate_worlds(world_info: Dictionary) -> void:
+	worlds = world_info
 
 
-func _on_login_button_pressed() -> void:
-	_show(login_panel)
+func fill_connection_info(_account_name: String, _account_id: int) -> void:
+	account_name = _account_name
+	account_id = _account_id
 
 
-func _on_login_login_button_pressed() -> void:
-	var account_name_edit: LineEdit = $LoginPanel/VBoxContainer/VBoxContainer/VBoxContainer/LineEdit
-	var password_edit: LineEdit = $LoginPanel/VBoxContainer/VBoxContainer/VBoxContainer2/LineEdit
-	
-	var username: String = account_name_edit.text
-	var password: String = password_edit.text
-	
-	var login_button: Button = $LoginPanel/VBoxContainer/VBoxContainer/LoginButton
-	login_button.disabled = true
-	if (
-		CredentialsUtils.validate_username(username).code != CredentialsUtils.UsernameError.OK
-		or CredentialsUtils.validate_password(password).code != CredentialsUtils.UsernameError.OK
-	):
-		login_button.disabled = false
+func _start_world_flow() -> void:
+	if worlds.is_empty():
 		return
-
-	popup_panel.display_waiting_popup()
-	var d: Dictionary = await do_request(
-		HTTPClient.Method.METHOD_POST,
-		GatewayApi.login(),
-		{"u": username, "p": password,
-		GatewayApi.KEY_TOKEN_ID: token}
-	)
-	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		login_button.disabled = false
-		return
-	
-	populate_worlds(d.get("w", {}))
-	fill_connection_info(d["a"]["name"], d["a"]["id"])
-	
-	popup_panel.hide()
-	_show($WorldSelection, false)
+	var world_id: int = worlds.keys()[0].to_int()
+	current_world_id = world_id
+	_load_characters(world_id)
 
 
-func _on_guest_button_pressed() -> void:
-	popup_panel.display_waiting_popup()
-
-	var d: Dictionary = await do_request(
-		HTTPClient.Method.METHOD_POST,
-		GatewayApi.guest(),
-		{GatewayApi.KEY_TOKEN_ID: token}
-	)
-	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		return
-	
-	fill_connection_info(d["a"]["name"], d["a"]["id"])
-	populate_worlds(d.get("w", {}))
-	
-	popup_panel.hide()
-	_show($WorldSelection, false)
-
-
-func _on_world_selected(world_id: int) -> void:
-	$WorldSelection.hide()
-	popup_panel.display_waiting_popup()
+func _load_characters(world_id: int) -> void:
 	var d: Dictionary = await do_request(
 		HTTPClient.Method.METHOD_POST,
 		GatewayApi.world_characters(),
-		{GatewayApi.KEY_WORLD_ID: world_id,
-		GatewayApi.KEY_ACCOUNT_ID: account_id,
-		GatewayApi.KEY_ACCOUNT_USERNAME: account_name,
-		GatewayApi.KEY_TOKEN_ID: token}
+		{
+			GatewayApi.KEY_WORLD_ID: world_id,
+			GatewayApi.KEY_ACCOUNT_ID: account_id,
+			GatewayApi.KEY_ACCOUNT_USERNAME: account_name,
+			GatewayApi.KEY_TOKEN_ID: token
+		}
 	)
 	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		$WorldSelection.show()
 		return
 	
-	var container: HBoxContainer = $CharacterSelection/VBoxContainer/HBoxContainer
-	var i: int = 0
-	var character_id: String
-	for button: Button in container.get_children():
-		if button.pressed.is_connected(_on_character_selected):
-			button.pressed.disconnect(_on_character_selected)
-		if d["data"].size() > i:
-			character_id = d["data"].keys()[i]
-			button.text = "%s\nClass: %s\nLevel: %d" % [
-				d["data"][character_id]["name"],
-				d["data"][character_id]["class"],
-				d["data"][character_id]["level"],
-			]
-			button.pressed.connect(_on_character_selected.bind(world_id, character_id.to_int()))
-		else:
-			button.text = "Create New Character"
-			button.pressed.connect(_on_character_selected.bind(world_id, -1))
-		i += 1
-	popup_panel.hide()
-	_show($CharacterSelection)
+	var chars: Dictionary = d.get("data", {})
+	if chars.size() == 0:
+		tabs.current_tab = 2 # CharacterCreation
+		back_button.show()
+	else:
+		var first_id: int = chars.keys()[0].to_int()
+		_enter_world(world_id, first_id)
 
 
-func _on_character_selected(world_id: int, character_id: int) -> void:
-	current_world_id = world_id
-	if character_id == -1:
-		_show($CharacterCreation)
-		return
-	
-	$CharacterSelection.hide()
-	$BackButton.hide()
-	popup_panel.display_waiting_popup()
-	
+func _enter_world(world_id: int, character_id: int) -> void:
 	var d: Dictionary = await do_request(
 		HTTPClient.Method.METHOD_POST,
 		GatewayApi.world_enter(),
@@ -228,50 +152,109 @@ func _on_character_selected(world_id: int, character_id: int) -> void:
 		}
 	)
 	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		$CharacterSelection.show()
-		$BackButton.show()
 		return
-	
 	world_server.connect_to_server(d["address"], d["port"], d["token"])
 	queue_free.call_deferred()
 
 
-func _on_create_character_button_pressed() -> void:
-	var username_edit: LineEdit = $CharacterCreation/VBoxContainer/VBoxContainer/HBoxContainer2/LineEdit
-
-	var create_button: Button = $CharacterCreation/VBoxContainer/VBoxContainer/CreateButton
-	create_button.disabled = true
-	$BackButton.hide()
-	$CharacterCreation.hide()
+func _on_login_login_button_pressed() -> void:
+	var username: String = login_user.text
+	var password: String = login_pass.text
 	
-	var result: Dictionary
-	result = CredentialsUtils.validate_username(username_edit.text)
-	if result.code != CredentialsUtils.UsernameError.OK:
-		await popup_panel.confirm_message("Username:\n" + result.message)
-		create_button.disabled = false
-		$BackButton.show()
-		$CharacterCreation.show()
+	login_button.disabled = true
+	if (
+		CredentialsUtils.validate_username(username).code != CredentialsUtils.UsernameError.OK
+		or CredentialsUtils.validate_password(password).code != CredentialsUtils.UsernameError.OK
+	):
+		login_button.disabled = false
 		return
 
-	popup_panel.display_waiting_popup()
+	var d: Dictionary = await do_request(
+		HTTPClient.Method.METHOD_POST,
+		GatewayApi.login(),
+		{
+			"u": username,
+			"p": password,
+			GatewayApi.KEY_TOKEN_ID: token
+		}
+	)
+	if d.has("error"):
+		login_button.disabled = false
+		return
+	
+	populate_worlds(d.get("w", {}))
+	fill_connection_info(d["a"]["name"], d["a"]["id"])
+	login_button.disabled = false
+	_start_world_flow()
+
+
+func _on_guest_button_pressed() -> void:
+	var d: Dictionary = await do_request(
+		HTTPClient.Method.METHOD_POST,
+		GatewayApi.guest(),
+		{GatewayApi.KEY_TOKEN_ID: token}
+	)
+	if d.has("error"):
+		return
+	
+	fill_connection_info(d["a"]["name"], d["a"]["id"])
+	populate_worlds(d.get("w", {}))
+	_start_world_flow()
+
+
+func _on_create_account_button_pressed() -> void:
+	if create_pass.text != create_pass_repeat.text:
+		return
+	var result: Dictionary
+	result = CredentialsUtils.validate_username(create_user.text)
+	if result.code != CredentialsUtils.UsernameError.OK:
+		return
+	result = CredentialsUtils.validate_password(create_pass.text)
+	if result.code != CredentialsUtils.UsernameError.OK:
+		return
+	
+	var d: Dictionary = await do_request(
+		HTTPClient.Method.METHOD_POST,
+		GatewayApi.account_create(),
+		{
+			"u": create_user.text,
+			"p": create_pass.text,
+			GatewayApi.KEY_TOKEN_ID: token
+		}
+	)
+	if d.has("error"):
+		return
+	fill_connection_info(d["a"]["name"], d["a"]["id"])
+	populate_worlds(d.get("w", {}))
+	_start_world_flow()
+
+
+func _on_create_character_button_pressed() -> void:
+	create_char_button.disabled = true
+	back_button.hide()
+	
+	var result: Dictionary = CredentialsUtils.validate_username(char_name.text)
+	if result.code != CredentialsUtils.UsernameError.OK:
+		create_char_button.disabled = false
+		back_button.show()
+		return
+
 	var d: Dictionary = await do_request(
 		HTTPClient.Method.METHOD_POST,
 		GatewayApi.world_create_char(),
 		{
 			GatewayApi.KEY_TOKEN_ID: token,
 			"data": {
-				"name": username_edit.text,
-				"skin": selected_skin_id,
+				"name": char_name.text,
+				"house": selected_house,
 			},
 			GatewayApi.KEY_ACCOUNT_USERNAME: account_name,
 			GatewayApi.KEY_WORLD_ID: current_world_id
 		}
 	)
 	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		create_button.disabled = false
-		$CharacterCreation.show()
+		create_char_button.disabled = false
+		tabs.current_tab = 2
 		return
 	
 	world_server.connect_to_server(
@@ -280,75 +263,3 @@ func _on_create_character_button_pressed() -> void:
 		d["data"]["auth-token"]
 	)
 	queue_free.call_deferred()
-
-
-func create_account() -> void:
-	var name_edit: LineEdit = $CreateAccountPanel/VBoxContainer/VBoxContainer/VBoxContainer/LineEdit
-	var password_edit: LineEdit = $CreateAccountPanel/VBoxContainer/VBoxContainer/VBoxContainer2/LineEdit
-	var password_repeat_edit: LineEdit = $CreateAccountPanel/VBoxContainer/VBoxContainer/VBoxContainer3/LineEdit
-
-	if password_edit.text != password_repeat_edit.text:
-		await popup_panel.confirm_message("Passwords don't match")
-		return
-	
-	var result: Dictionary
-	result = CredentialsUtils.validate_username(name_edit.text)
-	if result.code != CredentialsUtils.UsernameError.OK:
-		await popup_panel.confirm_message("Username:\n" + result.message)
-		return
-	result = CredentialsUtils.validate_password(password_edit.text)
-	if result.code != CredentialsUtils.UsernameError.OK:
-		await popup_panel.confirm_message("Password:\n" + result.message)
-		return
-	
-	$CreateAccountPanel.hide()
-	popup_panel.display_waiting_popup()
-
-	var d: Dictionary = await do_request(
-		HTTPClient.Method.METHOD_POST,
-		GatewayApi.account_create(),
-		{"u": name_edit.text, "p": password_edit.text,
-		GatewayApi.KEY_TOKEN_ID: token}
-	)
-	if d.has("error"):
-		await popup_panel.confirm_message(str(d))
-		$CreateAccountPanel.show()
-		return
-	
-	fill_connection_info(d["a"]["name"], d["a"]["id"])
-	populate_worlds(d.get("w", {}))
-	
-	popup_panel.hide()
-	_show($WorldSelection, false)
-
-
-func _on_create_account_button_pressed() -> void:
-	_show($CreateAccountPanel)
-
-
-func populate_worlds(world_info: Dictionary) -> void:
-	var container: HBoxContainer = $WorldSelection/VBoxContainer/HBoxContainer
-	
-	var i: int = 0
-	for button: Button in container.get_children():
-		if button.pressed.is_connected(_on_world_selected):
-			button.pressed.disconnect(_on_world_selected)
-		if i < world_info.size():
-			var world_id: String = world_info.keys()[i]
-			button.text = "%s\n\n%s" % [
-				world_info[world_id].get("name", "name"),
-				" \n".join(str(world_info[world_id]["info"]).split(", "))
-			]
-			button.pressed.connect(_on_world_selected.bind(world_id.to_int()))
-			
-		else:
-			button.hide()
-		i += 1
-
-
-func fill_connection_info(_account_name: String, _account_id: int) -> void:
-	account_name = _account_name
-	account_id = _account_id
-	$ConnectionInfo.text = "Account-name: %s\nAccount-ID: %s" % [
-		account_name, account_id
-	]

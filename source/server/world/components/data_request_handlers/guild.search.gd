@@ -9,11 +9,11 @@ func data_request_handler(
 	const MAX_RESULT: int = 10
 	var i: int = 0
 	var result: Dictionary
-	var guild_names: PackedStringArray = instance.world_server.database.player_data.guilds.keys()
+	var club_names: PackedStringArray = instance.world_server.database.player_data.clubs.keys()
 	var to_search: String = args.get("q", "")
-	for guild_name: String in guild_names:
-		if guild_name.to_lower().contains(to_search):
-			result[guild_name] = 0
+	for club_name: String in club_names:
+		if club_name.to_lower().contains(to_search):
+			result[club_name] = 0
 		if i >= MAX_RESULT:
 			break
 		i += 1

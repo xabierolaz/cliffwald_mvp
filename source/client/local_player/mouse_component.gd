@@ -1,5 +1,5 @@
 class_name MouseComponent
-extends Node2D
+extends Node3D
 
 
 var mouse_ingame: bool = true
@@ -19,4 +19,4 @@ func _notification(what: int) -> void:
 
 func _process(_delta: float) -> void:
 	if mouse_ingame and window_focus:
-		position = get_global_mouse_position()
+		pass

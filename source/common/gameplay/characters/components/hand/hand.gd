@@ -1,62 +1,21 @@
-@tool
-@icon("res://assets/node_icons/blue/icon_hand.png")
 class_name Hand
-extends Sprite2D
+extends Node3D # Cambiado de Sprite2D a Node3D
 
+# Mantenemos los Enums para no romper otros scripts que los usan
+enum Sides { LEFT, RIGHT }
+enum Status { IDLE, GRAB, PULL }
+enum Types { HUMAN, BROWN, ORC, GOBLIN }
 
-const SIZE: int = 16
-
-enum Sides {
-	LEFT,
-	RIGHT
-}
-
-enum Status {
-	IDLE,
-	GRAB,
-	PULL
-}
-
-enum Types {
-	HUMAN,
-	BROWN,
-	ORC,
-	GOBLIN,
-}
-
-@export var side: Sides = Sides.LEFT:
-	set(new_side):
-		side = new_side
-		_update_hands()
-
-@export var status: Status = Status.IDLE:
-	set(new_status):
-		status = new_status
-		_update_hands()
-
-@export var type: Types = Types.HUMAN:
-	set = _set_type
-
+@export var side: Sides = Sides.LEFT
+@export var status: Status = Status.IDLE
+@export var type: Types = Types.HUMAN
 
 func _init() -> void:
-	_update_hands()
+	pass
 
-
+# Funciones vacías por compatibilidad si algún otro script las llama
 func _update_hands() -> void:
-	if status == Status.PULL:
-		region_rect = Rect2(2 * SIZE, 1 * SIZE, SIZE, SIZE)
-	else:
-		region_rect = Rect2(side * SIZE, status * SIZE, SIZE, SIZE)
-
+	pass
 
 func _set_type(new_type: Types) -> void:
-	match new_type:
-		Types.HUMAN:
-			texture = preload("res://assets/sprites/items/weapons/hands/human_hands.png")
-		Types.BROWN:
-			texture = preload("res://assets/sprites/items/weapons/hands/brown_leather_gloves.png")
-		Types.GOBLIN:
-			texture = preload("res://assets/sprites/items/weapons/hands/goblin_hands.png")
-		Types.ORC:
-			texture = preload("res://assets/sprites/items/weapons/hands/orc_hands.png")
 	type = new_type

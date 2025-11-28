@@ -2,8 +2,8 @@ class_name ContentRegistry
 extends RefCounted
 
 
-var _id_to_path: Dictionary[int, StringName]
-var _slug_to_id: Dictionary[StringName, int]
+var _id_to_path: Dictionary
+var _slug_to_id: Dictionary
 
 
 func _init(content_index: ContentIndex) -> void:

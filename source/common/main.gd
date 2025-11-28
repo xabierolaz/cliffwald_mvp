@@ -1,45 +1,31 @@
 extends Node
-## Main Scene - This is the entry point of the application (set at application/run/main_scene).
-## Its sole responsibility is to determine and initialize the application role
-## (world server, gateway server, master server, or client) based on feature flags.
 
+const GATEWAY_SCENE = preload("res://source/server/gateway/gateway_main.tscn")
+const MASTER_SCENE = preload("res://source/server/master/master_main.tscn")
+const WORLD_SCENE = preload("res://source/server/world/world_main.tscn")
+const CLIENT_MAIN_SCENE = preload("res://source/client/client_main.tscn")
 
 func _ready() -> void:
-	var features: Dictionary[String, Callable] = {
-		"client": start_as_client,
-		"gateway-server": start_as_gateway_server,
-		"master-server": start_as_master_server,
-		"world-server": start_as_world_server,
-	}
+	print("--- MAIN ENTRY POINT ---")
 	
-	var command_line_arg: String = CmdlineUtils.get_parsed_args().get("mode", "")
-	
-	if features.has(command_line_arg):
-		features[command_line_arg].call()
-		return
-	
-	for feature: String in features:
-		if OS.has_feature(feature):
-			features[feature].call()
-			return
-	
-	printerr(
-		"No valid feature tag was found."
-		+ "\nPlease check either README.md or common/main.gd."
-	)
+	# [FIX] Ocultar la etiqueta de error si existe
+	if has_node("ErrorLabel"):
+		$ErrorLabel.hide()
+		$ErrorLabel.queue_free()
 
+	if OS.has_feature("gateway-server"):
+		_load_scene(GATEWAY_SCENE)
+	elif OS.has_feature("master-server"):
+		_load_scene(MASTER_SCENE)
+	elif OS.has_feature("world-server"):
+		_load_scene(WORLD_SCENE)
+	elif OS.has_feature("client"):
+		_load_scene(CLIENT_MAIN_SCENE)
+	else:
+		# Sin etiquetas válidas, mostramos la etiqueta de error si está disponible.
+		if has_node("ErrorLabel"):
+			$ErrorLabel.show()
 
-func start_as_client() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://source/client/client_main.tscn")
-
-
-func start_as_gateway_server() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://source/server/gateway/gateway_main.tscn")
-
-
-func start_as_master_server() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://source/server/master/master_main.tscn")
-
-
-func start_as_world_server() -> void:
-	get_tree().change_scene_to_file.call_deferred("res://source/server/world/world_main.tscn")
+func _load_scene(packed_scene: PackedScene) -> void:
+	var instance = packed_scene.instantiate()
+	add_child(instance)

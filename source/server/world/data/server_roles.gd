@@ -5,7 +5,7 @@ extends Resource
 # Make sure to leave the highest priority (100) to the developer/higher role 
 # as it will have access to every command.
 
-@export var roles: Dictionary[String, Dictionary] = {
+@export var roles: Dictionary = {
 	"default": {
 		"priority": 0,
 		"commands": []

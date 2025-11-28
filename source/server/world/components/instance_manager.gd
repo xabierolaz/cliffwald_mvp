@@ -5,7 +5,7 @@ extends SubViewportContainer
 const INSTANCE_COLLECTION_PATH: String = "res://source/common/gameplay/maps/instance/instance_collection/"
 const GLOBAL_COMMANDS_PATH: String = "res://source/server/world/components/chat_command/global_commands/"
 
-var loading_instances: Dictionary[InstanceResource, ServerInstance]
+var loading_instances: Dictionary
 var instance_collection: Array[InstanceResource]
 
 @export var world_server: WorldServer
@@ -54,10 +54,10 @@ func charge_new_instance(_map_path: String, _instance_id: String) -> void:
 	pass
 
 
-func _on_player_entered_warper(player: Player, current_instance: ServerInstance, warper: Warper) -> void:
+func _on_player_entered_warper(player: Node, current_instance, warper) -> void:
 	var instance_index: int = -1 # Will be useful later
-	var target_instance: ServerInstance
-	var instance_resource: InstanceResource = warper.target_instance
+	var target_instance
+	var instance_resource = warper.target_instance
 	if not instance_resource:
 		return
 	
@@ -88,7 +88,7 @@ func queue_charge_instance(instance_resource: InstanceResource, callback: Callab
 func player_switch_instance(
 	target_instance: ServerInstance,
 	warper_target_id: int,
-	player: Player,
+	player: Node,
 	current_instance: ServerInstance,
 ) -> void:
 	var peer_id: int = player.name.to_int()
@@ -157,7 +157,6 @@ func set_instance_collection() -> void:
 
 
 func unload_unused_instances() -> void:
-	print("Checking unload_unused_instances")
 	for instance: ServerInstance in get_children():
 		if instance.instance_resource.load_at_startup:
 			continue

@@ -2,6 +2,10 @@
 .godot/
 export_presets.cfg
 
+# Local Godot binaries/zips
+Godot_v*.x86_64
+Godot_v*.zip
+
 # Imported translations (automatically generated from CSV files)
 *.translation
 

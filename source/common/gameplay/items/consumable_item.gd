@@ -9,7 +9,7 @@ extends Item
 @export var default_charges: int = 1
 
 
-func can_use(player: Player) -> bool:
+func can_use(player: Node) -> bool:
 	return false
 	#var charges := stack.get_int(&"charges", default_charges)
 	#if charges <= 0:
@@ -19,7 +19,7 @@ func can_use(player: Player) -> bool:
 	#return true
 
 
-func on_use(character: Character) -> void:
+func on_use(character: Node) -> void:
 	pass
 	#for effect: GameplayEffect in effects:
 		#effect.on_added(character.ability_system_component)
