@@ -94,10 +94,13 @@ func spawn_player(player_id: int) -> void:
 	new_player.set_multiplayer_authority(player_id)
 
 	players_by_peer_id[player_id] = new_player
+	var map_name := "null"
+	if instance_map:
+		map_name = str(instance_map.name)
 	print("InstanceClient: spawn %s player_id=%d map=%s" % [
 		"local" if is_local else "remote",
 		player_id,
-		instance_map.name if instance_map else "null"
+		map_name
 	])
 
 	if instance_map and not new_player.is_inside_tree():
