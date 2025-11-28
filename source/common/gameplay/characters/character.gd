@@ -8,8 +8,6 @@ enum Animations {
 	DEATH,
 }
 
-var hand_type: Hand.Types
-
 var skin_id: int:
 	set = _set_skin_id
 
@@ -18,12 +16,6 @@ var anim: Animations = Animations.IDLE:
 
 var pivot: float = 0.0:
 	set = _set_pivot
-
-var hand_offset: Node3D
-var hand_pivot: Node3D
-
-var right_hand_spot: Node3D
-var left_hand_spot: Node3D
 
 var state_synchronizer: StateSynchronizer
 var ability_system_component: AbilitySystemComponent
@@ -34,12 +26,6 @@ var locomotion_state_machine: AnimationNodeStateMachinePlayback
 
 
 func _ready() -> void:
-	# Resolve nodes defensively; some optional nodes are not present in the 3D placeholder scene.
-	hand_offset = get_node_or_null("HandOffset")
-	hand_pivot = hand_offset.get_node_or_null("HandPivot") if hand_offset else null
-	right_hand_spot = hand_pivot.get_node_or_null("RightHandSpot") if hand_pivot else null
-	left_hand_spot = hand_pivot.get_node_or_null("LeftHandSpot") if hand_pivot else null
-
 	state_synchronizer = get_node_or_null("StateSynchronizer")
 	ability_system_component = get_node_or_null("AbilitySystemComponent")
 	equipment_component = get_node_or_null("EquipmentComponent")
@@ -85,8 +71,6 @@ func _set_anim(new_anim: Animations) -> void:
 
 func _set_pivot(new_pivot: float) -> void:
 	pivot = new_pivot
-	if hand_pivot:
-		hand_pivot.rotation.y = new_pivot
 
 
 # Rotate character on the Y axis instead of 2D-style flipping.
@@ -95,5 +79,3 @@ func face_direction(direction: Vector3) -> void:
 		return
 	var yaw: float = atan2(direction.x, direction.z)
 	rotation.y = yaw
-	if hand_pivot:
-		hand_pivot.rotation.y = yaw
