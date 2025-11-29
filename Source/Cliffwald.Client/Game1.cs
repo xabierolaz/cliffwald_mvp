@@ -31,6 +31,7 @@ public class Game1 : Game
 
     protected override void Initialize()
     {
+        // Check for render test argument
         var args = Environment.GetCommandLineArgs();
         if (args.Contains("--render-test"))
         {
@@ -51,6 +52,7 @@ public class Game1 : Game
 
         _pixelTexture = new Texture2D(GraphicsDevice, 1, 1);
         _pixelTexture.SetData(new Color[] { Color.White });
+        // TODO: use this.Content to load your game content here
     }
 
     protected override void Update(GameTime gameTime)
@@ -67,6 +69,13 @@ public class Game1 : Game
         Window.Title = $"Cliffwald | Pop: {_populationManager.Students.Count} | Time: {_populationManager.Clock.GetTimeDisplay()} | Spell: {_magicSystem.LastSpell}";
 
         base.Update(gameTime);
+        // TODO: Add your update logic here
+
+        base.Update(gameTime);
+
+        // If in render test mode and we've already taken the screenshot, we can exit or just idle.
+        // For automated testing, exiting is often useful, but the prompt didn't strictly say "Exit".
+        // It just said "SaveScreenshot". We will stick to that.
     }
 
     protected override void Draw(GameTime gameTime)
@@ -110,6 +119,9 @@ public class Game1 : Game
             }
         }
         _spriteBatch.End();
+        GraphicsDevice.Clear(Color.CornflowerBlue);
+
+        // TODO: Add your drawing code here
 
         base.Draw(gameTime);
 
@@ -135,5 +147,12 @@ public class Game1 : Game
             Vector2.Zero,
             SpriteEffects.None,
             0);
+            // We do this at the end of Draw to capture the final frame state
+            VisualTester.SaveScreenshot(GraphicsDevice, "init_test.png");
+            _screenshotTaken = true;
+
+            // Optional: Print to console for the test runner to see
+            Console.WriteLine("Render test complete: init_test.png saved.");
+        }
     }
 }

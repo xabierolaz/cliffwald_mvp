@@ -12,4 +12,5 @@ public struct PlayerState
     /// 0=Down, 1=Right, 2=Up, 3=Left
     /// </summary>
     public int Direction;
+    public Vector2 Pos;
 }

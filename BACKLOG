@@ -1,0 +1,45 @@
+# 🦁 CLIFFWALD "ULTRA-BEAST MODE" BACKLOG (V3.0)
+
+> **CORE PILLAR:** Mouse Gestures are the controller. 1:1 Simulation.
+> **VISUAL PROOF:** Every feature must be verifiable via `--snapshot`.
+
+## 👤 PHASE 0: IDENTITY (Character Creator)
+- [ ] **[SCENE_CREATOR]** Implement `CharacterCreationScene`.
+    - **UI:** Draw arrow buttons to cycle through: `HairIndex` (0-5), `SkinColor` (Palette), `EyeColor`.
+    - **Doctrine Selector:** 3 Big Buttons (Ignis/Axiom/Vesper) with descriptions.
+    - **Name Input:** Simple text field logic.
+- [ ] **[NET_LOGIN]** Implement `Packet_CreateChar`. Client sends data -> Server validates & stores -> Server sends `Packet_JoinWorld`.
+- [ ] **[PERSISTENCE]** Save created character to a JSON file (local prototype) so you don't recreate it every run.
+
+## 🧠 PHASE 1: THE BRAIN (Simulation Core)
+- [ ] **[AI_GRID]** Implement `GridMap` (100x100). Wall collision logic.
+- [ ] **[AI_ASTAR]** Implement `Pathfinder` (A*).
+- [ ] **[SCHEDULE_DATA]** Rigid Schedule (Breakfast@0800, Class@0900, Sleep@2200).
+
+## 🏫 PHASE 2: THE ACADEMY (World)
+- [ ] **[MAP_HALL]** Great Hall with 3 colored tables + 84 assigned seats.
+- [ ] **[MAP_DORMS]** 3 Dorms with 28 assigned beds each.
+
+## 👥 PHASE 3: THE POPULATION (87 Agents)
+- [ ] **[SPAWNER]** Spawn 84 Students + 3 Professors.
+- [ ] **[FSM_BRAIN]** Finite State Machine (Idle -> Eat -> Class -> Sleep).
+
+## ✨ PHASE 4: GESTURE MAGIC SYSTEM (The Core Mechanic)
+- [ ] **[GESTURE_ENGINE]** Implement `$1 Unistroke Recognizer` in C# (`GestureMath.cs`).
+    - **Requirement:** Must normalize scale/rotation to detect shapes regardless of size.
+    - **Templates:** Define mathematical point templates for:
+        1.  `Triangle` (Pyromancy/Explosion)
+        2.  `Square` (Earth/Defense)
+        3.  `Circle` (Aegis/Shield)
+        4.  `Line` (Basic Wand Attack)
+- [ ] **[SPELL_LOGIC]** Implement `SpellManager`.
+    - **Cast Logic:**
+        - If `Line` -> Raycast from player in drawing direction (Instant Hit).
+        - If `Triangle` -> Spawn `FireProjectile` towards mouse release point.
+        - If `Circle` -> Spawn `ShieldEntity` at mouse position.
+        - If `Square` -> Spawn `StoneWall` obstacle at mouse position.
+    - **Visuals:** Draw the mouse trail in White (Charging) -> Flash Color on Success.
+
+## ⚡ PHASE 5: MMO FEATURES
+- [ ] **[NET_COMBAT]** Sync Spells. If Player A casts Triangle, Player B must see the fireball.
+- [ ] **[CHAT_BUBBLES]** Render text above heads.
