@@ -28,6 +28,7 @@ public class MagicSystem
                 LastSpell = "Casting...";
             }
 
+            // Add point if moved enough
             Vector2 pos = new Vector2(currentMouse.X, currentMouse.Y);
             if (Trail.Count == 0 || Vector2.Distance(Trail.Last(), pos) > 5)
             {
@@ -51,6 +52,7 @@ public class MagicSystem
             return;
         }
 
+        // Bounding Box
         float minX = float.MaxValue, maxX = float.MinValue;
         float minY = float.MaxValue, maxY = float.MinValue;
 
@@ -69,6 +71,8 @@ public class MagicSystem
         Vector2 last = Trail.Last();
         float distFirstLast = Vector2.Distance(first, last);
 
+        // Heuristics
+
         // Horizontal Line: Width > 100 && Height < 30
         if (width > 100 && height < 30)
         {
@@ -79,6 +83,8 @@ public class MagicSystem
         // Circle: Width approx Height && Distance(First, Last) < 20 (Prompt says 20)
         // Check Aspect Ratio
         if (Math.Abs(width - height) < 50 && distFirstLast < 20)
+        // Circle: Width approx Height && Closed Loop
+        if (Math.Abs(width - height) < 50 && distFirstLast < 30)
         {
             LastSpell = "FIREBALL (Circle)";
             return;

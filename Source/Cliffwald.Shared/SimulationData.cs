@@ -49,6 +49,12 @@ public class GameClock
     // Prompt says: "Global Clock controls behavior".
     // Let's stick to the previous logic: 120s real time = 24h game time.
     // 5s real = 1h game.
+    // Assuming a Day Cycle. Let's make 1 Real Minute = 1 Game Hour?
+    // Or simpler: 1 Real Second = 1 Game Minute.
+    // Day = 24 Hours = 1440 Minutes = 24 Real Seconds.
+    // That's very fast.
+    // Let's try: Day = 2 Minutes (120 seconds).
+    // 120s = 24h. 5s = 1h.
 
     public int GetGameHour()
     {

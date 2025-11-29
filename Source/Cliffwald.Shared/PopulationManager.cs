@@ -20,6 +20,9 @@ public class PopulationManager
             s.Year = (i / 21) + 1; // 0-20=Year1, 21-41=Year2... 63-83=Year4
 
             // Random start position
+            s.Year = (i / 21) + 1; // 0-20=Year1, 21-41=Year2, ...
+
+            // Random start position around center
             s.Position = new Vector2((i % 10) * 10 - 50, (i / 10) * 10 - 50);
             s.TargetPosition = s.Position;
 
@@ -36,6 +39,8 @@ public class PopulationManager
         {
             // Scheduler Logic (The Living Schedule)
             // Hour 08-09 (Breakfast): Target = GreatHall (0, -300)
+            // Scheduler Logic
+            // If Hour 08-09 (Breakfast): Target = GreatHall (0, -300).
             if (hour >= 8 && hour < 9)
             {
                 student.TargetPosition = new Vector2(0, -300);
@@ -49,6 +54,17 @@ public class PopulationManager
                 student.TargetPosition = new Vector2(x, -100);
             }
             // Hour 22-06 (Sleep): Target = Dorms (Ignis=Left, Axiom=Center, Vesper=Right)
+            // If Hour 09-13 (Classes): Target = Classrooms (Spread X based on Year)
+            else if (hour >= 9 && hour < 13)
+            {
+                // Year 1 = -400, Year 4 = 400.
+                // Map 1->-400, 4->400.
+                // Range 800. Steps: -400, -133, 133, 400.
+                float x = -400 + (student.Year - 1) * (800f / 3f);
+                student.TargetPosition = new Vector2(x, -100); // Assume classrooms at Y=-100
+            }
+            // If Hour 22-06 (Sleep): Target = Dorms
+            // Ignis=Left (-300), Axiom=Center (0), Vesper=Right (300)
             else if (hour >= 22 || hour < 6)
             {
                 float x = 0;
@@ -63,11 +79,19 @@ public class PopulationManager
             else
             {
                 // Idle / Free Time -> Center
+                student.TargetPosition = new Vector2(x, 200); // Dorms at Y=200
+            }
+            else
+            {
+                // Free Time / Wander
+                // Keep current target or return to center?
+                // Let's send them to Commons (0,0)
                 student.TargetPosition = Vector2.Zero;
             }
 
             // Movement Logic
             float speed = 120f; // px/sec
+            float speed = 120f; // px per sec
             if (Vector2.Distance(student.Position, student.TargetPosition) > 1f)
             {
                 Vector2 dir = student.TargetPosition - student.Position;
