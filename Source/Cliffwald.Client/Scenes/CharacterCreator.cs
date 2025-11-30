@@ -6,6 +6,7 @@ using Cliffwald.Shared;
 
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
+using Point = Microsoft.Xna.Framework.Point;
 
 namespace Cliffwald.Client.Scenes;
 
