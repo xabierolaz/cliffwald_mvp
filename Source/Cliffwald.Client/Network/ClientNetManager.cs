@@ -11,13 +11,12 @@ public class ClientNetManager : INetEventListener
     private NetManager _netManager;
     private NetPacketProcessor _packetProcessor;
     private NetPeer _serverPeer;
-    private readonly NetDataWriter _writer = new NetDataWriter();
     public bool IsConnected => _serverPeer != null && _serverPeer.ConnectionState == ConnectionState.Connected;
 
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
+        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => r.GetVector2());
 
         // Subscribe
         _packetProcessor.SubscribeReusable<JoinAcceptPacket>(OnJoinAccept);
@@ -50,9 +49,7 @@ public class ClientNetManager : INetEventListener
 
         // Send Join Request
         var packet = new JoinRequestPacket { ProtocolVersion = 1 };
-        _writer.Reset();
-        _packetProcessor.Write(_writer, packet);
-        _serverPeer.Send(_writer, DeliveryMethod.ReliableOrdered);
+        _packetProcessor.Send(peer, packet, DeliveryMethod.ReliableOrdered);
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)

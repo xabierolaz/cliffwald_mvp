@@ -17,18 +17,18 @@ public struct PacketHeader
 
 // Simple struct wrappers for serialization (LiteNetLib handles basic types well)
 // In a real scenario we'd use INetSerializable or similar
-public class JoinRequestPacket
+public struct JoinRequestPacket
 {
     public int ProtocolVersion;
 }
 
-public class JoinAcceptPacket
+public struct JoinAcceptPacket
 {
     public int PlayerId;
     public Vector2 SpawnPosition;
 }
 
-public class StateUpdatePacket
+public struct StateUpdatePacket
 {
     public int Tick;
     // We would have a list of entities here

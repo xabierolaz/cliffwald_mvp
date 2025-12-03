@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using Cliffwald.Server.Network;
+using Cliffwald.Server.Data;
 
 namespace Cliffwald.Server;
 
@@ -10,6 +11,11 @@ class Program
     {
         Console.WriteLine("Cliffwald Server Starting...");
 
+        // Initialize Database
+        var dbManager = new DatabaseManager();
+        dbManager.Initialize();
+
+        // Initialize Networking
         var netManager = new ServerNetManager();
         netManager.Start(9050);
 
@@ -28,6 +34,7 @@ class Program
             netManager.Update();
 
             // Simulation Logic would go here
+            // e.g., Update Students in DB every few minutes
 
             Thread.Sleep(15); // ~60 FPS
         }

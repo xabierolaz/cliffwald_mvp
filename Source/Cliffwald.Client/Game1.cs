@@ -32,7 +32,6 @@ public class Game1 : Game
     private MagicSystem _magicSystem;
     private CharacterCreator _characterCreator;
     private List<Projectile> _projectiles;
-    private Cliffwald.Shared.AI.GridMap _gridMap;
 
     private Texture2D _pixelTexture;
     private GameState _currentState = GameState.CharacterCreator;
@@ -54,8 +53,6 @@ public class Game1 : Game
         {
             _renderTestMode = true;
         }
-
-        _gridMap = new Cliffwald.Shared.AI.GridMap();
 
         _populationManager = new PopulationManager();
         _populationManager.Initialize();
@@ -172,28 +169,13 @@ public class Game1 : Game
             _spriteBatch.Begin(transformMatrix: transform);
 
             // Grid
-            int w = Cliffwald.Shared.AI.GridMap.Width;
-            int h = Cliffwald.Shared.AI.GridMap.Height;
-            int ts = Cliffwald.Shared.AI.GridMap.TileSize;
-
-            Color gridColor = Color.DarkGray * 0.2f;
-
-            // Draw vertical lines
-            float halfWidth = (w * ts) / 2f;
-            float halfHeight = (h * ts) / 2f;
-
-            for (int x = 0; x <= w; x++)
-            {
-                float posX = -halfWidth + (x * ts);
-                DrawLine(new Vector2(posX, -halfHeight), new Vector2(posX, halfHeight), gridColor);
-            }
-
-            // Draw horizontal lines
-            for (int y = 0; y <= h; y++)
-            {
-                float posY = -halfHeight + (y * ts);
-                DrawLine(new Vector2(-halfWidth, posY), new Vector2(halfWidth, posY), gridColor);
-            }
+            int gridSize = 1000;
+            int spacing = 100;
+            Color gridColor = Color.DarkGray * 0.5f;
+            for (int x = -gridSize; x <= gridSize; x += spacing)
+                DrawLine(new Vector2(x, -gridSize), new Vector2(x, gridSize), gridColor);
+            for (int y = -gridSize; y <= gridSize; y += spacing)
+                DrawLine(new Vector2(-gridSize, y), new Vector2(gridSize, y), gridColor);
 
             // Population
             foreach (var student in _populationManager.Students)
