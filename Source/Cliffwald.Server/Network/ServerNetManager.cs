@@ -10,12 +10,16 @@ public class ServerNetManager : INetEventListener
 {
     private NetManager _netManager;
     private NetPacketProcessor _packetProcessor;
+    private readonly NetDataWriter _writer = new NetDataWriter();
     private int _connectedClients = 0;
 
     public ServerNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => r.GetVector2());
+        _packetProcessor.RegisterNestedType(
+            (w, v) => { w.Put(v.X); w.Put(v.Y); },
+            r => new Microsoft.Xna.Framework.Vector2(r.GetFloat(), r.GetFloat())
+        );
 
         // Register Callbacks
         _packetProcessor.SubscribeReusable<JoinRequestPacket, NetPeer>(OnJoinRequest);
@@ -82,6 +86,8 @@ public class ServerNetManager : INetEventListener
 
         // Send Accept
         var acceptPacket = new JoinAcceptPacket { PlayerId = peer.Id, SpawnPosition = new Microsoft.Xna.Framework.Vector2(0, 0) };
-        _packetProcessor.Send(_netManager, acceptPacket, DeliveryMethod.ReliableOrdered);
+        _writer.Reset();
+        _packetProcessor.Write(_writer, acceptPacket);
+        peer.Send(_writer, DeliveryMethod.ReliableOrdered);
     }
 }
