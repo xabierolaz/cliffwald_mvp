@@ -16,9 +16,15 @@ public class ServerNetManager : INetEventListener
     {
         _packetProcessor = new NetPacketProcessor();
         _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => r.GetVector2());
+        _packetProcessor.RegisterNestedType<StudentData>();
 
         // Register Callbacks
         _packetProcessor.SubscribeReusable<JoinRequestPacket, NetPeer>(OnJoinRequest);
+    }
+
+    public void BroadcastState(StateUpdatePacket packet)
+    {
+        _packetProcessor.Send(_netManager, packet, DeliveryMethod.Sequenced);
     }
 
     public void Start(int port)

@@ -31,5 +31,5 @@ public class JoinAcceptPacket
 public class StateUpdatePacket
 {
     public int Tick;
-    // We would have a list of entities here
+    public StudentData[] Students;
 }
