@@ -10,6 +10,10 @@ class Program
     {
         Console.WriteLine("Cliffwald Server Starting...");
 
+        // Initialize Database
+        var dbManager = new Cliffwald.Server.Persistence.DatabaseManager();
+        dbManager.Initialize();
+
         var netManager = new ServerNetManager();
         netManager.Start(9050);
 

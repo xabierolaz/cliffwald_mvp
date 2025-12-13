@@ -9,6 +9,7 @@ using Cliffwald.Client.Input;
 using Cliffwald.Shared;
 using Cliffwald.Client.Scenes;
 using Cliffwald.Client.Magic;
+using Cliffwald.Client.Network;
 
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -32,6 +33,7 @@ public class Game1 : Game
     private MagicSystem _magicSystem;
     private CharacterCreator _characterCreator;
     private List<Projectile> _projectiles;
+    private ClientNetManager _netManager;
 
     private Texture2D _pixelTexture;
     private GameState _currentState = GameState.CharacterCreator;
@@ -62,6 +64,7 @@ public class Game1 : Game
 
         _characterCreator = new CharacterCreator(_graphics.PreferredBackBufferWidth, _graphics.PreferredBackBufferHeight);
         _projectiles = new List<Projectile>();
+        _netManager = new ClientNetManager();
 
         base.Initialize();
     }
@@ -125,10 +128,12 @@ public class Game1 : Game
                     case Doctrine.Vesper: _playerColor = Color.Violet; break;
                 }
                 _currentState = GameState.Playing;
+                _netManager.Connect("localhost", 9050);
             }
         }
         else if (_currentState == GameState.Playing)
         {
+            _netManager.Update();
             _populationManager.Update(dt);
             _magicSystem.Update();
 
