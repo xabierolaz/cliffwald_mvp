@@ -9,6 +9,7 @@ using Cliffwald.Client.Input;
 using Cliffwald.Shared;
 using Cliffwald.Client.Scenes;
 using Cliffwald.Client.Magic;
+using Cliffwald.Client.Network;
 
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -29,6 +30,7 @@ public class Game1 : Game
     private bool _snapshotTaken;
 
     private PopulationManager _populationManager;
+    private ClientNetManager _netManager;
     private MagicSystem _magicSystem;
     private CharacterCreator _characterCreator;
     private List<Projectile> _projectiles;
@@ -56,6 +58,13 @@ public class Game1 : Game
 
         _populationManager = new PopulationManager();
         _populationManager.Initialize();
+
+        _netManager = new ClientNetManager();
+        _netManager.OnStateReceived += (packet) =>
+        {
+             if (packet.Students != null)
+                 _populationManager.Students = new List<StudentData>(packet.Students);
+        };
 
         _magicSystem = new MagicSystem();
         _magicSystem.OnSpellCast += HandleSpellCast;
@@ -125,11 +134,13 @@ public class Game1 : Game
                     case Doctrine.Vesper: _playerColor = Color.Violet; break;
                 }
                 _currentState = GameState.Playing;
+                _netManager.Connect("localhost", 9050);
             }
         }
         else if (_currentState == GameState.Playing)
         {
-            _populationManager.Update(dt);
+            _netManager.Update();
+            // _populationManager.Update(dt); // Handled by Server
             _magicSystem.Update();
 
             // Update Projectiles
