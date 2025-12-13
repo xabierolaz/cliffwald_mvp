@@ -20,6 +20,15 @@ public struct PacketHeader
 public class JoinRequestPacket
 {
     public int ProtocolVersion;
+    public Doctrine Doctrine;
+}
+
+public class ClientStatePacket
+{
+    public Vector2 Position;
+    public Vector2 Velocity;
+    public bool IsMoving;
+    public int Direction;
 }
 
 public class JoinAcceptPacket
@@ -32,4 +41,5 @@ public class StateUpdatePacket
 {
     public int Tick;
     public StudentData[] Students;
+    public PlayerState[] Players;
 }

@@ -19,6 +19,7 @@ public class ClientNetManager : INetEventListener
         _packetProcessor = new NetPacketProcessor();
         _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
         _packetProcessor.RegisterNestedType<StudentData>();
+        _packetProcessor.RegisterNestedType<PlayerState>();
 
         // Subscribe
         _packetProcessor.SubscribeReusable<JoinAcceptPacket>(OnJoinAccept);
@@ -26,18 +27,32 @@ public class ClientNetManager : INetEventListener
     }
 
     public event Action<StateUpdatePacket> OnStateReceived;
+    public event Action<int> OnJoinAccepted;
 
     private void OnStateUpdatePacket(StateUpdatePacket packet)
     {
         OnStateReceived?.Invoke(packet);
     }
 
-    public void Connect(string ip, int port)
+    private Doctrine _pendingDoctrine;
+
+    public void Connect(string ip, int port, Doctrine doctrine)
     {
+        _pendingDoctrine = doctrine;
         _netManager = new NetManager(this);
         _netManager.Start();
         _netManager.Connect(ip, port, "Cliffwald");
         Console.WriteLine($"[CLIENT] Connecting to {ip}:{port}...");
+    }
+
+    public void SendClientState(ClientStatePacket packet)
+    {
+        if (_serverPeer != null)
+        {
+             _writer.Reset();
+             _packetProcessor.Write(_writer, packet);
+             _serverPeer.Send(_writer, DeliveryMethod.Sequenced);
+        }
     }
 
     public void Update()
@@ -58,7 +73,7 @@ public class ClientNetManager : INetEventListener
         _serverPeer = peer;
 
         // Send Join Request
-        var packet = new JoinRequestPacket { ProtocolVersion = 1 };
+        var packet = new JoinRequestPacket { ProtocolVersion = 1, Doctrine = _pendingDoctrine };
         _writer.Reset();
         _packetProcessor.Write(_writer, packet);
         _serverPeer.Send(_writer, DeliveryMethod.ReliableOrdered);
@@ -91,6 +106,6 @@ public class ClientNetManager : INetEventListener
     private void OnJoinAccept(JoinAcceptPacket packet)
     {
         Console.WriteLine($"[CLIENT] Join Accepted! Assigned ID: {packet.PlayerId}");
-        // Here we would set the LocalPlayer ID
+        OnJoinAccepted?.Invoke(packet.PlayerId);
     }
 }

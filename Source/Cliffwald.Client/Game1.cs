@@ -10,6 +10,7 @@ using Cliffwald.Shared;
 using Cliffwald.Client.Scenes;
 using Cliffwald.Client.Magic;
 using Cliffwald.Client.Network;
+using Cliffwald.Shared.Network;
 
 using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
@@ -34,6 +35,9 @@ public class Game1 : Game
     private MagicSystem _magicSystem;
     private CharacterCreator _characterCreator;
     private List<Projectile> _projectiles;
+
+    private LocalPlayer _localPlayer;
+    private List<PlayerState> _remotePlayers = new List<PlayerState>();
 
     private Texture2D _pixelTexture;
     private GameState _currentState = GameState.CharacterCreator;
@@ -64,6 +68,12 @@ public class Game1 : Game
         {
              if (packet.Students != null)
                  _populationManager.Students = new List<StudentData>(packet.Students);
+             if (packet.Players != null)
+                 _remotePlayers = new List<PlayerState>(packet.Players);
+        };
+        _netManager.OnJoinAccepted += (id) =>
+        {
+            _localPlayer = new LocalPlayer(id, Vector2.Zero);
         };
 
         _magicSystem = new MagicSystem();
@@ -85,32 +95,29 @@ public class Game1 : Game
 
     private void HandleSpellCast(string spellName, Vector2 start, Vector2 end, Vector2 center)
     {
-        // Convert screen coordinates to world coordinates
-        // The camera is centered at (0,0) with offset (ScreenWidth/2, ScreenHeight/2).
-        // Mouse input (start, end, center) is in Screen Space.
-        // We need World Space for projectile spawning.
-
-        // World = Screen - Offset
         Vector2 offset = new Vector2(_graphics.PreferredBackBufferWidth / 2f, _graphics.PreferredBackBufferHeight / 2f);
+        Vector2 camPos = _localPlayer?.State.Position ?? Vector2.Zero;
 
-        // However, "Force Push" (Line) usually originates from the Player (0,0 in World).
-        // "Fireball" (Circle) originates at the target (Mouse pos).
+        // Adjust for Camera
+        // World = Screen - Offset + CamPos
+        // Center is Screen Space.
+
+        Vector2 worldCenter = center - offset + camPos;
 
         if (spellName == "Force Push")
         {
             Vector2 direction = end - start;
             if (direction != Vector2.Zero) direction.Normalize();
 
-            // Spawn from Player (0,0)
-            _projectiles.Add(new Projectile(Vector2.Zero, direction * 500f, _playerColor, 1.0f));
+            // Spawn from Player
+            Vector2 spawnPos = _localPlayer?.State.Position ?? Vector2.Zero;
+            _projectiles.Add(new Projectile(spawnPos, direction * 500f, _playerColor, 1.0f));
             Console.WriteLine($"[CAST] {spellName} -> Dir: {direction}");
         }
         else if (spellName == "Fireball")
         {
-            // Spawn huge fireball at the center of the gesture (World Space)
-            Vector2 worldPos = center - offset;
-            _projectiles.Add(new Projectile(worldPos, Vector2.Zero, Color.Orange, 5.0f));
-            Console.WriteLine($"[CAST] {spellName} -> At: {worldPos}");
+            _projectiles.Add(new Projectile(worldCenter, Vector2.Zero, Color.Orange, 5.0f));
+            Console.WriteLine($"[CAST] {spellName} -> At: {worldCenter}");
         }
     }
 
@@ -134,13 +141,26 @@ public class Game1 : Game
                     case Doctrine.Vesper: _playerColor = Color.Violet; break;
                 }
                 _currentState = GameState.Playing;
-                _netManager.Connect("localhost", 9050);
+                _netManager.Connect("localhost", 9050, _characterCreator.SelectedDoctrine);
             }
         }
         else if (_currentState == GameState.Playing)
         {
             _netManager.Update();
             // _populationManager.Update(dt); // Handled by Server
+
+            if (_localPlayer != null)
+            {
+                _localPlayer.Update(gameTime);
+                _netManager.SendClientState(new ClientStatePacket
+                {
+                    Position = _localPlayer.State.Position,
+                    Velocity = _localPlayer.State.Velocity,
+                    IsMoving = _localPlayer.State.IsMoving,
+                    Direction = _localPlayer.State.Direction
+                });
+            }
+
             _magicSystem.Update();
 
             // Update Projectiles
@@ -151,8 +171,7 @@ public class Game1 : Game
             }
         }
 
-        // Debug Title
-        Window.Title = $"Cliffwald [{_currentState}] | Spells: {_magicSystem.LastSpell}";
+        Window.Title = $"Cliffwald [{_currentState}] | Spells: {_magicSystem.LastSpell} | Players: {_remotePlayers.Count + 1}";
 
         base.Update(gameTime);
     }
@@ -175,7 +194,8 @@ public class Game1 : Game
         else if (_currentState == GameState.Playing)
         {
             // Draw World
-            var transform = Matrix.CreateTranslation(_graphics.PreferredBackBufferWidth / 2f, _graphics.PreferredBackBufferHeight / 2f, 0);
+            Vector2 camPos = _localPlayer?.State.Position ?? Vector2.Zero;
+            var transform = Matrix.CreateTranslation(-camPos.X, -camPos.Y, 0) * Matrix.CreateTranslation(_graphics.PreferredBackBufferWidth / 2f, _graphics.PreferredBackBufferHeight / 2f, 0);
 
             _spriteBatch.Begin(transformMatrix: transform);
 
@@ -195,14 +215,31 @@ public class Game1 : Game
                 _spriteBatch.Draw(_pixelTexture, rect, student.DoctrineColor);
             }
 
-            // Local Player (Center)
-            Rectangle playerRect = new Rectangle(-16, -24, 32, 48);
-            _spriteBatch.Draw(_pixelTexture, playerRect, _playerColor);
+            // Remote Players
+            foreach (var p in _remotePlayers)
+            {
+                if (_localPlayer != null && p.Id == _localPlayer.State.Id) continue;
+
+                Color pColor = Color.White;
+                switch (p.Doctrine) {
+                    case Doctrine.Ignis: pColor = Color.Red; break;
+                    case Doctrine.Axiom: pColor = Color.Blue; break;
+                    case Doctrine.Vesper: pColor = Color.Violet; break;
+                }
+                Rectangle r = new Rectangle((int)p.Position.X - 16, (int)p.Position.Y - 24, 32, 48);
+                _spriteBatch.Draw(_pixelTexture, r, pColor);
+            }
+
+            // Local Player
+            if (_localPlayer != null)
+            {
+                Rectangle playerRect = new Rectangle((int)_localPlayer.State.Position.X - 16, (int)_localPlayer.State.Position.Y - 24, 32, 48);
+                _spriteBatch.Draw(_pixelTexture, playerRect, _playerColor);
+            }
 
             // Projectiles
             foreach (var proj in _projectiles)
             {
-                // Base size 8x8, scaled
                 int size = (int)(8 * proj.Scale);
                 int offset = size / 2;
                 _spriteBatch.Draw(_pixelTexture, new Rectangle((int)proj.Position.X - offset, (int)proj.Position.Y - offset, size, size), proj.Color);
