@@ -10,7 +10,7 @@
 
 ## PHASE 1: CORE SYSTEMS (In Progress)
 - [x] [TASK: NET_SYNC] Implement LiteNetLib.
-- [ ] [TASK: DB_PERSISTENCE] Implement SQLite for Student Data.
+- [x] [TASK: DB_PERSISTENCE] Implement SQLite for Student Data.
 
 ## PHASE 2: VISUALS (Pending)
 - [ ] [TASK: LIGHTING] Implement Normal Map Lighting.

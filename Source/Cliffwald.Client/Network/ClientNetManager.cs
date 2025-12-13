@@ -18,9 +18,18 @@ public class ClientNetManager : INetEventListener
     {
         _packetProcessor = new NetPacketProcessor();
         _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
+        _packetProcessor.RegisterNestedType<StudentData>();
 
         // Subscribe
         _packetProcessor.SubscribeReusable<JoinAcceptPacket>(OnJoinAccept);
+        _packetProcessor.SubscribeReusable<StateUpdatePacket>(OnStateUpdatePacket);
+    }
+
+    public event Action<StateUpdatePacket> OnStateReceived;
+
+    private void OnStateUpdatePacket(StateUpdatePacket packet)
+    {
+        OnStateReceived?.Invoke(packet);
     }
 
     public void Connect(string ip, int port)
