@@ -8,13 +8,13 @@
 - [x] [TASK: SPELL_LOGIC] Implement Projectile System & Line Casting.
 - [x] [TASK: AOE_SPELLS] Implement Circle Casting (Fireball).
 
-## PHASE 1: CORE SYSTEMS (In Progress)
+## PHASE 1: CORE SYSTEMS (Done)
 - [x] [TASK: NET_SYNC] Implement LiteNetLib.
-- [ ] [TASK: DB_PERSISTENCE] Implement SQLite for Student Data.
+- [x] [TASK: DB_PERSISTENCE] Implement SQLite for Student Data.
 
 ## PHASE 2: VISUALS (Pending)
 - [ ] [TASK: LIGHTING] Implement Normal Map Lighting.
 - [ ] [TASK: SPRITE_ANIM] Implement Animation State Machine.
 
-## PHASE 3: GAMEPLAY (Pending)
-- [ ] [TASK: SCHEDULE_AI] Refine AI Schedules.
+## PHASE 3: GAMEPLAY (In Progress)
+- [x] [TASK: SCHEDULE_AI] Refine AI Schedules.

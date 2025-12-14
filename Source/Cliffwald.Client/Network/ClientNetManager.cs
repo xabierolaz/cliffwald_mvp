@@ -1,6 +1,7 @@
 using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Cliffwald.Shared;
 using Cliffwald.Shared.Network;
 using Microsoft.Xna.Framework;
 
@@ -12,15 +13,41 @@ public class ClientNetManager : INetEventListener
     private NetPacketProcessor _packetProcessor;
     private NetPeer _serverPeer;
     private readonly NetDataWriter _writer = new NetDataWriter();
+
     public bool IsConnected => _serverPeer != null && _serverPeer.ConnectionState == ConnectionState.Connected;
+    public event Action<StateUpdatePacket> OnStateReceived;
 
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
+
+        // Register Vector2
+        _packetProcessor.RegisterNestedType<Vector2>(
+            (w, v) => { w.Put(v.X); w.Put(v.Y); },
+            r => new Vector2(r.GetFloat(), r.GetFloat())
+        );
+
+        // Register StudentData
+        _packetProcessor.RegisterNestedType<StudentData>(
+            (w, s) => {
+                w.Put(s.Id);
+                w.Put((int)s.Doctrine);
+                w.Put(s.Year);
+                w.Put(s.Position.X); w.Put(s.Position.Y);
+                w.Put(s.TargetPosition.X); w.Put(s.TargetPosition.Y);
+            },
+            r => new StudentData {
+                Id = r.GetInt(),
+                Doctrine = (Doctrine)r.GetInt(),
+                Year = r.GetInt(),
+                Position = new Vector2(r.GetFloat(), r.GetFloat()),
+                TargetPosition = new Vector2(r.GetFloat(), r.GetFloat())
+            }
+        );
 
         // Subscribe
         _packetProcessor.SubscribeReusable<JoinAcceptPacket>(OnJoinAccept);
+        _packetProcessor.SubscribeReusable<StateUpdatePacket>(OnStateUpdate);
     }
 
     public void Connect(string ip, int port)
@@ -83,5 +110,10 @@ public class ClientNetManager : INetEventListener
     {
         Console.WriteLine($"[CLIENT] Join Accepted! Assigned ID: {packet.PlayerId}");
         // Here we would set the LocalPlayer ID
+    }
+
+    private void OnStateUpdate(StateUpdatePacket packet)
+    {
+        OnStateReceived?.Invoke(packet);
     }
 }

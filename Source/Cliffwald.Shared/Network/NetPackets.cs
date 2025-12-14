@@ -15,8 +15,6 @@ public struct PacketHeader
     public PacketType Type;
 }
 
-// Simple struct wrappers for serialization (LiteNetLib handles basic types well)
-// In a real scenario we'd use INetSerializable or similar
 public class JoinRequestPacket
 {
     public int ProtocolVersion;
@@ -31,5 +29,5 @@ public class JoinAcceptPacket
 public class StateUpdatePacket
 {
     public int Tick;
-    // We would have a list of entities here
+    public StudentData[] Students;
 }
