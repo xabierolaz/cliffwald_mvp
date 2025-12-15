@@ -1,6 +1,7 @@
 using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Cliffwald.Shared;
 using Cliffwald.Shared.Network;
 using Microsoft.Xna.Framework;
 
@@ -17,8 +18,8 @@ public class ClientNetManager : INetEventListener
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
-        _packetProcessor.RegisterNestedType<StudentData>();
+        _packetProcessor.RegisterNestedType((w, v) => { w.Put(v.X); w.Put(v.Y); }, r => new Vector2(r.GetFloat(), r.GetFloat()));
+        _packetProcessor.RegisterNestedType<StudentData>(() => new StudentData());
         _packetProcessor.RegisterNestedType<PlayerState>();
 
         // Subscribe
