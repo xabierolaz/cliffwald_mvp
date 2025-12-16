@@ -1,6 +1,7 @@
 using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Cliffwald.Shared;
 using Cliffwald.Shared.Network;
 using Microsoft.Xna.Framework;
 
@@ -17,9 +18,13 @@ public class ClientNetManager : INetEventListener
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
-        _packetProcessor.RegisterNestedType<StudentData>();
-        _packetProcessor.RegisterNestedType<PlayerState>();
+        // Register Vector2 manually as it doesn't implement INetSerializable
+        _packetProcessor.RegisterNestedType<Vector2>(
+            (w, v) => { w.Put(v.X); w.Put(v.Y); },
+            r => new Vector2(r.GetFloat(), r.GetFloat())
+        );
+        // StudentData and PlayerState implement INetSerializable, so no need to register nested type manually if used in arrays/lists
+        // However, if they are used as top level packets or nested, LiteNetLib detects interface.
 
         // Subscribe
         _packetProcessor.SubscribeReusable<JoinAcceptPacket>(OnJoinAccept);

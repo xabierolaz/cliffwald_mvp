@@ -1,4 +1,5 @@
 using Microsoft.Xna.Framework;
+using LiteNetLib.Utils;
 
 namespace Cliffwald.Shared;
 
@@ -18,7 +19,7 @@ public enum ActivityState
     Walking
 }
 
-public class StudentData
+public class StudentData : INetSerializable
 {
     public int Id;
     public Doctrine Doctrine;
@@ -38,6 +39,26 @@ public class StudentData
                 default: return Color.White;
             }
         }
+    }
+
+    public void Serialize(NetDataWriter writer)
+    {
+        writer.Put(Id);
+        writer.Put((int)Doctrine);
+        writer.Put(Year);
+        writer.Put(Position.X);
+        writer.Put(Position.Y);
+        writer.Put(TargetPosition.X);
+        writer.Put(TargetPosition.Y);
+    }
+
+    public void Deserialize(NetDataReader reader)
+    {
+        Id = reader.GetInt();
+        Doctrine = (Doctrine)reader.GetInt();
+        Year = reader.GetInt();
+        Position = new Vector2(reader.GetFloat(), reader.GetFloat());
+        TargetPosition = new Vector2(reader.GetFloat(), reader.GetFloat());
     }
 }
 
