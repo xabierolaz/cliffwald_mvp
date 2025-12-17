@@ -15,6 +15,7 @@ public class ServerNetManager : INetEventListener
     private NetManager _netManager;
     private NetPacketProcessor _packetProcessor;
     private int _connectedClients = 0;
+    private readonly NetDataWriter _writer = new NetDataWriter();
 
     // Store connected players
     public Dictionary<int, PlayerState> Players = new Dictionary<int, PlayerState>();
@@ -22,8 +23,11 @@ public class ServerNetManager : INetEventListener
     public ServerNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
+        // Register Vector2 serialization using extensions
         _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => r.GetVector2());
-        _packetProcessor.RegisterNestedType<StudentData>();
+
+        // Register nested types
+        _packetProcessor.RegisterNestedType<StudentData>(() => new StudentData());
         _packetProcessor.RegisterNestedType<PlayerState>();
 
         // Register Callbacks
@@ -35,7 +39,10 @@ public class ServerNetManager : INetEventListener
     {
         // Add players to packet before sending
         packet.Players = Players.Values.ToArray();
-        _packetProcessor.Send(_netManager, packet, DeliveryMethod.Sequenced);
+
+        _writer.Reset();
+        _packetProcessor.Write(_writer, packet);
+        _netManager.SendToAll(_writer, DeliveryMethod.Sequenced);
     }
 
     public void Start(int port)
@@ -120,7 +127,10 @@ public class ServerNetManager : INetEventListener
 
         // Send Accept
         var acceptPacket = new JoinAcceptPacket { PlayerId = peer.Id, SpawnPosition = new Vector2(0, 0) };
-        _packetProcessor.Send(peer, acceptPacket, DeliveryMethod.ReliableOrdered);
+
+        _writer.Reset();
+        _packetProcessor.Write(_writer, acceptPacket);
+        peer.Send(_writer, DeliveryMethod.ReliableOrdered);
     }
 
     private void OnClientState(ClientStatePacket packet, NetPeer peer)

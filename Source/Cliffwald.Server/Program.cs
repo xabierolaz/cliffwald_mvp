@@ -43,10 +43,17 @@ class Program
 
         while (running)
         {
-            if (Console.KeyAvailable)
+            try
             {
-                var key = Console.ReadKey(true);
-                if (key.Key == ConsoleKey.Q) running = false;
+                if (Console.KeyAvailable)
+                {
+                    var key = Console.ReadKey(true);
+                    if (key.Key == ConsoleKey.Q) running = false;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // Likely running headless/redirected input
             }
 
             netManager.Update();
