@@ -107,6 +107,9 @@ public class GestureRecognizer
 
     private static Vector2[] Resample(List<Vector2> points, int n)
     {
+        // Clone the list to avoid modifying the caller's data
+        points = new List<Vector2>(points);
+
         float I = PathLength(points) / (n - 1);
         float D = 0;
 

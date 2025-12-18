@@ -1,6 +1,7 @@
 using System;
 using LiteNetLib;
 using LiteNetLib.Utils;
+using Cliffwald.Shared;
 using Cliffwald.Shared.Network;
 using Microsoft.Xna.Framework;
 
@@ -17,8 +18,8 @@ public class ClientNetManager : INetEventListener
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
-        _packetProcessor.RegisterNestedType<StudentData>();
+        _packetProcessor.RegisterNestedType<Vector2>((w, v) => w.Put(v), r => r.GetVector2());
+        // StudentData is a class implementing INetSerializable, so we don't register it as nested struct
         _packetProcessor.RegisterNestedType<PlayerState>();
 
         // Subscribe
