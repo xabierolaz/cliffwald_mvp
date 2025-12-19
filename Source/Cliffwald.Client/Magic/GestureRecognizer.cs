@@ -107,21 +107,24 @@ public class GestureRecognizer
 
     private static Vector2[] Resample(List<Vector2> points, int n)
     {
-        float I = PathLength(points) / (n - 1);
+        // Clone points to avoid side effects
+        var workingPoints = new List<Vector2>(points);
+
+        float I = PathLength(workingPoints) / (n - 1);
         float D = 0;
 
-        List<Vector2> newPoints = new List<Vector2> { points[0] };
+        List<Vector2> newPoints = new List<Vector2> { workingPoints[0] };
 
-        for (int i = 1; i < points.Count; i++)
+        for (int i = 1; i < workingPoints.Count; i++)
         {
-            float d = Vector2.Distance(points[i - 1], points[i]);
+            float d = Vector2.Distance(workingPoints[i - 1], workingPoints[i]);
             if (D + d >= I)
             {
-                float qx = points[i - 1].X + ((I - D) / d) * (points[i].X - points[i - 1].X);
-                float qy = points[i - 1].Y + ((I - D) / d) * (points[i].Y - points[i - 1].Y);
+                float qx = workingPoints[i - 1].X + ((I - D) / d) * (workingPoints[i].X - workingPoints[i - 1].X);
+                float qy = workingPoints[i - 1].Y + ((I - D) / d) * (workingPoints[i].Y - workingPoints[i - 1].Y);
                 Vector2 q = new Vector2(qx, qy);
                 newPoints.Add(q);
-                points.Insert(i, q);
+                workingPoints.Insert(i, q);
                 D = 0;
             }
             else
@@ -132,7 +135,7 @@ public class GestureRecognizer
 
         if (newPoints.Count == n - 1)
         {
-            newPoints.Add(points.Last());
+            newPoints.Add(workingPoints.Last());
         }
 
         return newPoints.ToArray();

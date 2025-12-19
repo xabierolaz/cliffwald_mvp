@@ -17,7 +17,7 @@ public class ClientNetManager : INetEventListener
     public ClientNetManager()
     {
         _packetProcessor = new NetPacketProcessor();
-        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => new Vector2(r.GetFloat(), r.GetFloat()));
+        _packetProcessor.RegisterNestedType((w, v) => w.Put(v), r => r.GetVector2());
         _packetProcessor.RegisterNestedType<StudentData>();
         _packetProcessor.RegisterNestedType<PlayerState>();
 
