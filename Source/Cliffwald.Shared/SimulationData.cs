@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using LiteNetLib.Utils;
+using Cliffwald.Shared.Network;
 
 namespace Cliffwald.Shared;
 
@@ -18,7 +20,7 @@ public enum ActivityState
     Walking
 }
 
-public class StudentData
+public class StudentData : INetSerializable
 {
     public int Id;
     public Doctrine Doctrine;
@@ -39,16 +41,29 @@ public class StudentData
             }
         }
     }
+
+    public void Serialize(NetDataWriter writer)
+    {
+        writer.Put(Id);
+        writer.Put((int)Doctrine);
+        writer.Put(Year);
+        writer.Put(Position);
+        writer.Put(TargetPosition);
+    }
+
+    public void Deserialize(NetDataReader reader)
+    {
+        Id = reader.GetInt();
+        Doctrine = (Doctrine)reader.GetInt();
+        Year = reader.GetInt();
+        Position = reader.GetVector2();
+        TargetPosition = reader.GetVector2();
+    }
 }
 
 public class GameClock
 {
     public double ServerTime; // In Seconds
-
-    // Mapping: 1 Real Second = 1 Game Minute (implied or chosen for speed)
-    // Prompt says: "Global Clock controls behavior".
-    // Let's stick to the previous logic: 120s real time = 24h game time.
-    // 5s real = 1h game.
 
     public int GetGameHour()
     {
