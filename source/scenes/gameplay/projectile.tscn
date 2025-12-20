@@ -1,0 +1,32 @@
+[gd_scene load_steps=5 format=3 uid="uid://b8x2q4y5z1w3a"]
+
+[ext_resource type="Script" path="res://source/scripts/projectile.gd" id="1_script"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_v1"]
+radius = 0.2
+height = 0.4
+
+[sub_resource type="SphereShape3D" id="Shape_Col"]
+radius = 0.2
+
+[sub_resource type="SceneReplicationConfig" id="Rep_Config"]
+properties/0/path = NodePath(".:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:direction")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+
+[node name="Projectile" type="Area3D"]
+collision_layer = 4
+collision_mask = 3
+script = ExtResource("1_script")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_v1")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape_Col")
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="."]
+replication_config = SubResource("Rep_Config")

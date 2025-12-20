@@ -1,0 +1,171 @@
+[gd_scene load_steps=7 format=3 uid="uid://classroom_env"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Floor"]
+albedo_color = Color(0.4, 0.3, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_Floor"]
+material = SubResource("Mat_Floor")
+size = Vector3(20, 0.5, 25)
+
+[sub_resource type="BoxShape3D" id="Shape_Floor"]
+size = Vector3(20, 0.5, 25)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Desk"]
+albedo_color = Color(0.25, 0.15, 0.05, 1)
+
+[sub_resource type="BoxMesh" id="Mesh_Desk"]
+material = SubResource("Mat_Desk")
+size = Vector3(3, 1, 1.5)
+
+[sub_resource type="BoxShape3D" id="Shape_Desk"]
+size = Vector3(3, 1, 1.5)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Debug_Slot"]
+albedo_color = Color(1, 0, 1, 1)
+
+[sub_resource type="SphereMesh" id="Mesh_Debug_Slot"]
+material = SubResource("Mat_Debug_Slot")
+radius = 0.2
+height = 0.4
+
+[node name="Classroom" type="Node3D"]
+
+[node name="Floor" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.25, 0)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Floor"]
+mesh = SubResource("Mesh_Floor")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Floor"]
+shape = SubResource("Shape_Floor")
+
+[node name="DeskTeacher" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -8)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskTeacher"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskTeacher"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent1" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.75, -2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent1"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent1"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent2" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, -2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent2"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent2"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent3" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.75, -2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent3"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent3"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent4" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0.75, 2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent4"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent4"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent5" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent5"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent5"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent6" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0.75, 2)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent6"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent6"]
+shape = SubResource("Shape_Desk")
+
+[node name="DeskStudent7" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.75, 6)
+collision_layer = 2
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="DeskStudent7"]
+mesh = SubResource("Mesh_Desk")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DeskStudent7"]
+shape = SubResource("Shape_Desk")
+
+[node name="Slots" type="Node3D" parent="."]
+
+[node name="Slot_Ignis_Y1_01" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, -0.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_01"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_02" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -0.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_02"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_03" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, -0.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_03"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_04" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 1, 3.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_04"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_05" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 3.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_05"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_06" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 1, 3.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_06"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Slot_Ignis_Y1_07" type="Marker3D" parent="Slots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 7.5)
+
+[node name="DebugVisual" type="MeshInstance3D" parent="Slots/Slot_Ignis_Y1_07"]
+mesh = SubResource("Mesh_Debug_Slot")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4, -10)
+pixel_size = 0.05
+text = "CLASSROOM (YEAR 1)"
+font_size = 96
