@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://6bcg7fwcl6mi"]
+
+[ext_resource type="Script" uid="uid://bu6yn6ww7d7c8" path="res://source/common/gameplay/characters/character.gd" id="1_bnwqd"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_bnwqd"]
+radius = 0.4
+height = 1.8
+
+[sub_resource type="BoxMesh" id="CubeMesh"]
+size = Vector3(0.8, 1.8, 0.8)
+
+[node name="Character" type="CharacterBody3D"]
+collision_layer = 2
+collision_mask = 6
+script = ExtResource("1_bnwqd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_bnwqd")
+
+[node name="Visuals" type="Node3D" parent="."]
+
+[node name="CharacterModel" type="MeshInstance3D" parent="Visuals"]
+mesh = SubResource("CubeMesh")
