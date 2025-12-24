@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="WorldPlayerData" load_steps=2 format=3]
+
+[ext_resource type="Script" uid="uid://b0vab61d5a3tr" path="res://source/server/world/data/world_player_data.gd" id="1_script"]
+
+[resource]
+script = ExtResource("1_script")
+accounts = {}
+max_character_per_account = 3
+players = {}
+next_player_id = 0
+admin_ids = PackedInt32Array()
+user_roles = {}
+clubs = {}
