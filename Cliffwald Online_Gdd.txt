@@ -1,301 +1,48 @@
-Cliffwald Online – Master Game Design Document (GDD) v3.3 (Full Extended Version)
-Version: 3.3 (Full Spec - Doctrines & Cycles)
-Engine: Godot 4.x (Stable)
-
+Cliffwald Online – Master Game Design Document (GDD) v4.1 (Final Architecture & Design)
+Version: 4.1
+Engine: Godot 4.5 (Stable)
+Architecture: Authoritative Server + Native Multiplayer (ENet + MultiplayerSynchronizer)
 
 1. High Concept
-Cliffwald Online redefines the social MMO experience by merging school sim mechanics with the persistence of a massively multiplayer world. The player is not a solitary hero saving the world, but a university student seeking their place in a living, breathing magic academy full of secrets.
-Each player controls a single student avatar in a shared environment. Unlike traditional MMOs where the world is static and NPCs are mere quest dispensers, in Cliffwald the school is always alive and bustling. Each shard (server instance) maintains a constant population of 84 active students. Each house has 7 students per year, school has 4 years, there are 3 houses. This population is hybrid: it consists of human players connected at that moment and is automatically filled with persistent AI agents called "Echoes" until the quota is met. This ensures that hallways, the dining hall, and classrooms never feel empty, regardless of login time.
-Core Fantasy:
-Living the Academic Cycle: Experiencing the daily routine of a magic student, from waking up in the dormitory with your Doctrine-mates to running through the halls to attend a looping Class Block.
-True Magical Mastery (Skill-Based): Magic is not activated by pressing buttons on an action bar. It is executed through precise tactile gestures with the mouse, simulating wand movement. Success depends on muscle memory and player calmness, not just character statistics.
-Belonging and Legacy: Being sorted into one of the Three Doctrines, contributing to its victory in the Seasonal Cup, and leaving a mark on the server's history through moral alignment systems (Light/Shadow).
-2. Design Pillars (Expanded)
-1. The Living Schedule (Cyclic Blocks)
-Time in Cliffwald is a global and authoritative entity, synchronized by the server.
-Total Synchronization: If it is 08:00 AM on the server, all NPCs ("Echoes") start their breakfast routine in the Great Hall. Bells ring simultaneously for all 200 students.
-Player Adaptability (The Block System): Unlike rigid real-world schedules, classes function as Looping Time Blocks (e.g., a 2-hour in-game window). The lesson repeats in a cycle. Arriving "late" simply means joining the next loop of the lesson. This balances the pressure of punctuality with the flexibility of a video game.
-Environmental Consequences: Lighting, access to certain zones (doors locked by magic at night), and NPC density in hallways change dynamically according to server time.
-2. Tactile Magic (Visceral Skill-Based Casting)
-Combat and interaction move away from typical numerical abstractions (cooldowns, skill rotations).
-Physical Execution: To cast a fire spell, the player must physically draw the associated symbol on the screen. A poorly closed circle or a shaky line can result in a failed spell ("fizz") or reduced potency.
-High Risk, High Reward: This system creates natural tension. In the calm of a classroom, drawing is easy. In the middle of a duel, with a rival casting spells at you and having to dodge, drawing a complex figure requires great coolness and motor skill.
-Learning Curve: Player progress is based as much on improving their character as on improving their own ability to draw glyphs quickly.
-3. Seamless Immersion (Verticality)
-Immersion is sacred. Breaking it with loading screens would destroy the feeling of inhabiting a real castle.
-Unified Architecture: The entire castle—from the deepest dungeons to the highest astronomy tower, including the grounds and forest—exists in a single logical scene.
-Vertical Design Strategy: To justify short travel times in a massive map, the layout is vertical (Towers). Players use Arcane Elevators (diegetic fast travel) to move between floors instantly without cutting the camera.
-Visibility Technology: To make this technically viable with 200 avatars, Godot 4's native Rooms & Portals (Occlusion Culling) system is used. The engine "turns off" rendering for rooms that are not visible through open doors, allowing detailed interiors without sacrificing performance.
-4. Arcade Accessibility ("Game Feel")
-Although combat has a high skill ceiling, basic navigation and interaction with the world must be pleasant and fluid for everyone.
-Movement Fluidity: Controls recall action-adventure games from the 128-bit era (PS2/GameCube). Movement is responsive and satisfying with proper inertia.
-3. Target Audience & Business Model
-Demographic Target: Young and adult players (13+) who grew up with school fantasy literature. They seek an experience that captures the "atmosphere" and "social life" of those worlds, something pure action games often neglect. It also attracts players of Life Sims (like Animal Crossing) and social MMOs.
-Distribution Model: Free to Play (F2P) to maximize the player base and ensure an always-full school.
-Ethical Monetization Strategy:
-No "Pay for Power": Absolutely no sale of stat advantages, exclusive spells, or academic progress accelerators.
-Contextual Cosmetics:
-School Mode (Day): Sale of subtle accessories (wand designs, scarves, pet skins) compatible with the mandatory uniform.
-Free Mode (Night/Weekend): Sale of extravagant streetwear and costumes, creating a social loop where players buy skins to "show off" during free time.
+Cliffwald Online redefines the social MMO experience by merging school sim mechanics with the persistence of a massively multiplayer world.
+Population: 100 Concurrent Users (CCU) per shard.
+Structure: 3 Doctrines (Ignis, Axiom, Vesper) x 4 Years.
+
+2. The Arrival (New)
+* Transport: Players arrive at Cliffwald Academy via a massive Steam-Magical Zeppelin.
+* Visual: The Zeppelin docks at the highest tower (Axiom) or a dedicated Sky-Pier, offering a panoramic view of the castle layout before setting foot on ground.
+* Gameplay Function: Serves as the "Loading Screen" buffer and the initial social hub for new players (The Sortie).
+
+3. Design Pillars & Anti-Legacy Philosophy
+* Living Schedule: Time is authoritative. 1 Game Hour = 2 Real Minutes. NPCs obey strict routines (Eat -> Class -> Sleep).
+* Meaningful Space: No empty halls.
+    * Dorms contain assigned beds (Sleep mechanic).
+    * Common Rooms contain Crafting Stations.
+    * Great Hall contains Quest Board.
+* Landmarking: Asymmetric design (Tower vs Basement vs Garden) + Reference Windows to prevent minimap fatigue.
+* Tactile Magic: Gestures ($1 Unistroke) cast spells (Line, Circle, Triangle, Square).
+
+4. Technical Architecture
+* Protocol: ENet via UDP.
+* Spawning: MultiplayerSpawner automatically replicates nodes.
+* Sync: MultiplayerSynchronizer handles Position, Rotation, and Input.
+* AI: FSM-based NPCs ("Echoes") driven by a central ScheduleManager.
+
+5. World Layout (Greybox v3.1)
+* Hub: Great Hall (30x50m) with windows and 4 house tables.
+* Wings:
+    * Ignis (The Forge): Basement level, industrial vibe.
+    * Axiom (The Tower): High elevation, logic & study.
+    * Vesper (The Garden): Ground level, open roof, nature.
+* Secret Loop: A narrow maintenance tunnel connects the wings behind the main hall for stealth traversal at night.
+
+6. Magic & Combat
+* Projectiles: Kinetic (White/Push), Pyroclasm (Red/Dmg), Stasis (Yellow/Stun).
+* Defense: Aegis (Blue/Shield).
+* Mechanics: Projectiles have physical collision and destroy on impact.
+
+7. Day/Night Cycle
+* Visual: DirectionalLight3D rotates based on server time.
+* Gameplay: Gates to Library/Greenhouse lock at 22:00. Only the Secret Loop remains open.
 
 
-Season Pass: A seasonal progression system that unlocks themed cosmetic rewards (e.g., "Season of Specters", "Flight Tournament Season").
-
-
-4. World & General Structure
-Location: Cliffwald Academy, an imposing Gothic structure situated on a basalt cliff, battered by a stormy sea.
-4.1. Main Zones (Atmosphere & Function)
-The world is a single logical scene (World3D) divided into connected thematic areas without cuts:
-Great Hall: The social hub. Long tables, enchanted ceiling (local weather system), and notice boards. Features massive Prestige Pillars showing Doctrine scores in real-time.
-Academic Towers: Labyrinthine corridors full of specific classrooms, connected vertically.
-Doctrine Residences: Exclusive areas for each Doctrine. These are safe zones (no PvP) where players can customize their personal space (bed/trunk) and socialize with their faction.
-The Dreamscape: A surreal, instance-based zone accessible only by sleeping in a bed. Used for safe combat training.
-Greenhouses & Grounds: Outdoor zones for ingredient gathering and creature care.
-Flight Field: Outdoor stadium dedicated to broom sports and flying competitions.
-4.2. Advanced Navigation Systems
-Optimization (Streaming): The Rooms & Portals system defines "Cells" (rooms) and "Portals" (doors/windows). Godot calculates in real-time which cells are visible from the player's camera, discarding the rest of the geometry and actors (Echoes) in hidden zones.
-Wayfinding (The Guiding Wind): Due to the castle's vertical complexity, 2D maps are inefficient.
-Mechanic: Upon having an active quest or an upcoming class, pressing TAB summons the Guiding Wind.
-Visualization: A stream of particles (leaves, sparkles, or magic dust) materializes in the air and physically flows through hallways, turning corners and climbing stairs, tracing the optimal route calculated by the NavigationServer3D.
-Constraint: The wind fades or becomes erratic in "Secret Zones" or during Night Mode, forcing visual navigation.
-
-
-5. Doctrines (Player Identity & MBTI)
-The social structure replaces traditional houses with Three Doctrines. Selection is based on Cognitive Profiles (MBTI) and the character's philosophy regarding the source of magic.
-1. IGNIS (The Vanguard)
-Archetype: Dominion over Matter. (SP - Artisan / Practical SJ)
-Philosophy: Magic is Action. They value tangible impact, physical force, and construction.
-Aesthetic: Copper, Rust, and Leather tones. Common rooms resemble industrial workshops with active forges.
-Profile: Attracts pragmatic players who enjoy direct mechanics, risk/reward gameplay, and "doing" rather than "theorizing."
-2. AXIOM (The Synod)
-Archetype: Dominion over Mind. (NT - Rational / Theoretical SJ)
-Philosophy: Magic is Logic. They value systems, law, history, and technical perfection.
-Aesthetic: Cobalt Blue, Platinum, and Crystal. Common rooms are geometric observatories full of star charts and complex blackboards.
-Profile: Attracts strategists, analysts, and min-maxers who seek to understand the underlying rules of the world.
-3. VESPER (The Circle)
-Archetype: Dominion over Essence. (NF - Idealist)
-Philosophy: Magic is Will. They value intuition, untamed nature, the occult, and personal identity.
-Aesthetic: Deep Violet, Black, and Mold Green. Common rooms are organic, dimly lit arbors filled with bioluminescence and shadows.
-Profile: Attracts creative players, roleplayers, and those seeking a mysterious or unique identity.
-6. Character & State (Avatar Mechanics)
-6.1. Controller (3C - Character, Camera, Control)
-Control seeks precision without sacrificing cinematic feel.
-Camera: SpringArm3D with smooth collisions. Situated over the right shoulder, zooming in when aiming (Concentration Mode) and zooming out when exploring.
-Movement: CharacterBody3D with inertia and acceleration tuned to feel the character's weight.
-Sprint: Shift consumes a hidden stamina bar to prevent players from running 100% of the time indoors.
-
-
-Smart Auto-Jump:
-Problem: Jumping manually on spiral staircases or small platforms is often frustrating in 3D physics engines.
-Solution: The system casts a RayCast3D from the knees forward and another from the feet downward. If it detects a void in front of the feet but firm ground slightly further ahead or below, it automatically applies a vertical impulse (velocity.y) calculated to land safely. This turns castle navigation into a fluid and "magical" experience.
-
-
-6.2. Health, Defeat & Recovery
-HP System: Classic Health Bar of 100 Points. Damage is significant; an average duel lasts between 3 and 5 hits.
-No Death: In a school setting, death makes no thematic sense.
-"Stunned" State (Downed): Upon reaching 0 HP, the character enters a Ragdoll state or plays a fall/dizzie animation. For 5 seconds, the screen blurs, and the player loses control.
-Recovery: After the stun, the character automatically gets up with 20-30% health ("Second wind").
-Consequences:
-Competitive: Grant a point to the rival.
-Night (Sleepwalker): Forced teleportation to the dormitory and a "Fatigue" debuff (Reduced XP gain the next day).
-
-
-
-
-6.3. Hidden Alignment (Emergent Narrative)
-Variables: light_alignment (Light) and shadow_alignment (Shadow). These are persistent invisible counters in the database.
-Modifiers: Affected by decisions in quests ("Do you help the first-year or mock them?"), the type of spells frequently used, and participation in certain activities.
-The Delegates: At the end of the season, the system automatically selects the players with the highest score in each variable to become the protagonist "NPCs" of the final seasonal event.
-7. Time & Schedules (The Living Schedule)
-Time management is a gameplay mechanic.
-Server Clock: A full game day lasts approximately 48 real minutes (2 minutes per game hour).
-Day Cycle (38 Minutes): Academic Blocks. Attendance is mandatory for max XP. Uniforms required.
-Night Cycle (10 Minutes): Curfew. The server splits gameplay into two modes:
-A. The Sleepwalker (Risk & Stealth)
-The player physically leaves their room.
-The Castle Changes: Hallways become hostile. "Wardens" (NPCs) patrol with vision cones.
-Objective: Rare ingredients (Moonflowers) only spawn at night. Secret shortcuts are revealed in the dark.
-Risk: Being caught results in teleportation to bed and the Fatigue debuff.
-B. The Dreamer (Safety & Training)
-The player interacts with their bed to "Sleep".
-The Dreamscape: The player enters a surreal instance.
-Objective: Safe combat practice (PvE) against phantoms or minigames to grind spell levels without physical risk.
-8. Magic System: Gesture-Based ($1 Unistroke) Detailed
-The heart of the Cliffwald experience. Turning the mouse into a wand.
-8.1. Conjuration Flow (Input Flow)
-Preparation (Hold): Hold Right Click.
-Feedback: Camera FOV reduces slightly (Zoom In). Avatar raises right arm. Mouse cursor is freed from camera control and appears as a bright spark in the center of the screen.
-
-
-Gesturing (Draw): Move the mouse to trace the figure.
-Visualization: A line of light (Line2D with WorldEnvironment Glow) follows the trace, persisting for a few milliseconds before fading. Color matches the player's Doctrine.
-Tactical Movement: The player can continue using WASD to walk or Shift to strafe while drawing, allowing dodging of enemy attacks while preparing their own spell.
-
-
-Execution (Release): Release Right Click.
-Processing: The captured point array is normalized and compared with predefined templates using the $1 Unistroke algorithm.
-Hybrid Validation: The Client validates the shape (>80% similarity) for instant feedback. The Server validates the Rhythm (Timing) to prevent cheat macros.
-Success: The spell is instantiated and fired towards the aim point.
-Failure: Visual and audio error feedback (black sparks, "fizz" sound). The character suffers a small animation "recoil," leaving them vulnerable for an instant.
-
-
-8.2. General Interaction (Contextual)
-Highlight System: A post-processing Shader or overlay material detects when the camera RayCast passes over an interactable object, drawing a soft outline around the object. The outline color indicates interaction type (Gold = Quest, White = Object, Red = Enemy).
-Left Click: Executes context-sensitive interaction.
-9. Disciplines & Spells (Detailed)
-Initial universal spells designed to test different engine mechanics.
-9.1. Kinetic Pulse (Universal)
-Gesture: Simple Horizontal Line (—). (Left to right or vice versa).
-Effect: Fast projectile of white energy.
-Combat: Low damage (10 HP), but high Knockback. Ideal for pushing melee enemies away or knocking them out of control zones.
-Utility: Activates distant switches, pushes physical objects, and breaks vases.
-9.2. Aegis (Defense)
-Gesture: Circle (O). (Clockwise or counter-clockwise).
-Effect: Personal shield.
-Mechanic: Creates a translucent sphere (MeshInstance3D with distortion shader) around the player.
-Duration: 3 seconds or until absorbing 1 spell impact. While active, the player cannot attack (or attacks slower).
-9.3. Disruptor (Control)
-Gesture: "V" Shape. (Down-Right, then Up-Right).
-Effect: Tactical attack.
-Mechanic: Instant beam (Hitscan or very fast projectile) of violet color.
-Status Effect: Medium damage (20 HP). If it hits a rival who is in "Concentration Mode" (drawing), it cancels their spell immediately and applies a 0.5s Stun. It is the perfect "counter" for slow, powerful spells.
-10. Main Activities
-10.1. Classes (Looping Blocks)
-Attending class is not passive. Entering the active classroom triggers:
-The Loop: The Professor (AI) repeats the lesson cycle every 2 minutes.
-The Practice: An interface minigame activates where the player must repeat the gesture with increasing precision and speed against a timer.
-Grinding: Players can stay for multiple loops to improve their score.
-Reward: Discipline XP (needed to level up spells) and Prestige Points.
-10.2. Dueling Club
-Format: 1v1 or 2v2 matches in specific arenas.
-Rules: "Magical Sumo" or "First Blood" style. Use of environment (destructible cover) is key.
-10.3. Secret Exploration
-The castle is full of "Environmental Puzzles".
-Example: A statue holding an empty scale. The player must find stones of the correct weight and use Kinetic Pulse to place them, revealing a secret passage to a cosmetic chest.
-11. AI & Population (The "Echoes")
-Hybrid system to guarantee population density.
-Population Manager: The server monitors connected players (N). If N < 200, it instantiates (200 - N) AI agents ("Echoes").
-Seamless Integration: Echoes use the exact same models, uniforms, and animations as players. They are designed to be indistinguishable at a glance.
-Schedule Resource (JSON/Resource): The brain of the simulation.
-Current Implementation (Data-Driven in EchoStudent):
-- 21:00 - 08:00: Sleep (Dormitory)
-- 08:00 - 09:00: Breakfast (Great Hall)
-- 09:00 - 13:00: Class (Classroom)
-- 13:00 - 14:00: Lunch (Great Hall)
-- 14:00 - 19:00: Free Time (Wander)
-- 19:00 - 20:00: Dinner (Great Hall)
-- 20:00 - 21:00: Free Time (Wander)
-
-Code Architecture:
-- BaseStudent: Base class handling shared logic (Movement, Skinning, Gravity).
-- EchoStudent (AI): Inherits from BaseStudent. Handles Navigation (RVO Avoidance), Schedule, and Slot finding.
-- Player: Inherits from BaseStudent. Handles Input, Camera, and Network Sync.
-
-Behavior Logic (FSM):
-Transit (Go To): Uses NavigationAgent3D with RVO (Reciprocal Velocity Obstacles) to avoid collisions between agents while moving to assigned Slots.
-Socialize (Idle): Upon reaching destination, plays idle animations.
-Observe (Reaction): If it detects a combat event or spell nearby (spell_cast Signal), it stops activity, turns head toward event (Inverse Kinematics), and plays surprise or fear animations.
-
-11.3. Asignación de Puntos de Interés (POIs) Personalizados
-Para garantizar ubicaciones predecibles y evitar solapamientos, cada estudiante tiene un "ID de Asiento" único (Ej: Ignis_Y1_01). En cada sala clave (Dormitorios, Comedor, Aulas), se definen `Marker3D` (visibles solo en el editor) que representan la posición exacta de cada estudiante. Estos marcadores siguen la nomenclatura `Slot_<Casa>_<Año>_<Índice>` (Ej: `Slot_Ignis_Y1_01`). Cuando un Echo debe ir a una sala, busca el nodo de la sala y, dentro de ella, su `Slot` correspondiente, asegurando que cada uno ocupe su lugar asignado.
-
-12. Prestige & The Seasonal Cup (Social Systems)
-The engine of competition and social order.
-12.1. Prestige Economy
-Prestige points are not just numbers; they are the indicator of collective success.
-Point Sources:
-Academic (+10): Completing class minigames with >90% precision.
-Competitive (+5): Winning official duels in the Dueling Club.
-Heroic (+50): Completing daily Field Missions (require traveling to the forest or Night exploration).
-
-
-Visualization: Massive Pillars of Light in the Great Hall show progress in real-time, creating positive social pressure.
-12.2. Punishment System (Justice System)
-To maintain order, restricted zones and behaviors exist.
-Detection: Wardens (NPCs) have a vision cone that detects infractions.
-Consequences:
-Point Loss: The player loses Prestige points they themselves generated.
-Debuff: "Fatigue" reduces XP gain for a set time. Cleared by performing menial tasks (cleaning trophies).
-
-
-13. Economy & Crafting (Alchemy)
-An economic system based on effort, not speculation.
-13.1. Gathering
-No generic mining nodes. Resources are thematic.
-Flora: Plants growing in Greenhouses and the Forest. They have respawn cycles linked to server day/night (e.g., Moonflowers only appear during Night/Sleepwalker mode).
-Creature Parts: Rewards for caring for magical creatures (not killing them).
-13.2. Potion Brewing (The Brewing Minigame)
-Crafting is active and skill-based.
-Alchemy Station: Player must interact with a cauldron.
-Mechanic:
-Selection: Choose recipe (e.g., Speed Potion).
-Process: A rhythm and temperature control minigame. Keep heat in the "green zone" by tapping keys rhythmically and shaking the mouse to stir.
-Result: Execution quality determines potency (Effect duration) and quantity of vials produced.
-
-
-13.3. Currency & Trade
-School Credits: Soft currency earned by playing.
-Use: Exclusively to buy basic ingredients and cosmetic clothing.
-Restriction: No Auction House between players exists to avoid inflation and "gold farmers". Trade is only with NPCs.
-14. Seasons (Live Ops & Narrative)
-The game is structured in 8-week real-time cycles, simulating a compressed school year.
-14.1. Season Structure
-Weeks 1-2: Start of Term. Sorting into Doctrines. Introductory quests.
-Weeks 3-6: Mid-Term. Opening of episodic plots.
-Week 7 (Climax): Major narrative event (e.g., The Void Breach, The Tri-Doctrine Tournament).
-Week 8 (Graduation & Wipe):
-Election of Delegates: The system analyzes the database and names the two players with highest Light/Shadow alignment as "Legacy Delegates" (Honorary NPCs for the next season).
-Cup Ceremony: The winning Doctrine is announced, and permanent trophies are awarded for user profiles.
-
-
-14.2. Post-Wipe Persistence
-When the season ends, an "Academic Reset" occurs.
-Resets: Spell level, alignment, consumable inventory. (Everyone starts the term equal).
-Retained: Cosmetics collection, wands, pets, achievements, Doctrine reputation, and friends list.
-15. Requirements & Technical Specifications (Godot 4)
-15.1. Engine & Platform
-Engine: Godot 4.x (Latest Stable Version). Chosen for its flexible node system, lightweight nature, and excellent hybrid 2D/3D support (needed for gestures).
-Language: GDScript with strict typing (@export, class_name, -> void) to facilitate maintenance and performance.
-Platforms: Windows, Mac, Linux (PC First approach, keyboard/mouse controls).
-15.2. Network Architecture (Multiplayer)
-Topology: Monolithic Authoritative Server (MVP Phase).
-The game operates on a simplified Client-Server model. A single Godot instance (--headless) manages the entire simulation, player authentication, and world state.
-- Single Process: No separation between Master, Gateway, or World servers for this phase.
-- Direct Connection: Clients connect directly to the Host IP via ENet.
-- Focus: Immediate gameplay stability over infrastructure scaling.
-
-Protocol: ENetMultiplayerPeer (High-level layer over UDP).
-State Synchronization:
-Snapshot Interpolation: The server sends world state 20 times per second. Clients interpolate between the last two received states.
-RPCs (Remote Procedure Calls): Used for critical point events like "Cast Spell", "Impact", or "Open Door".
-
-
-Persistence: Local SQLite/JSON for prototype. No complex DB clusters yet.
-15.3. Graphics & Art
-Visual Style: Stylized Low-Poly or Cel-Shaded.
-Technical Reason: Rendering 200 custom characters on screen requires simple meshes and atlas-type textures to reduce Draw Calls.
-Artistic Reason: Ages better and allows rapid asset iteration by a small team.
-
-
-VFX: Intensive use of GPUParticles3D to represent magic. Magic should be the main light source and the most flashy element on screen.
-16. Prototype Roadmap (MVP) – Action Plan
-This plan defines immediate tasks for the first 4 weeks of development to achieve a playable "Vertical Slice".
-Phase 1: Core Loop & Networking (Weeks 1-2)
-Objective: Two cubes can connect, see each other move, and shoot at each other.
-Project Setup: Folder structure, Input Map, Physics Layers (World, Player, Spell, Trigger).
-Backend: Set up Monolithic Headless Server (Direct connection, no Gateway).
-Character Controller: Smooth 3D movement, SpringArm camera management, Auto-Jump logic.
-Gesture System: Implement $1 Unistroke script, draw Line2D, detect basic shapes, and send RPC.
-Basic Netcode: Synchronize movement and projectile spawning (MultiplayerSpawner).
-Phase 2: Environment & Basic AI (Week 3)
-Objective: The world looks like a school and has life.
-Map Greyboxing: Basic geometry modeling (Residences -> Vertical Hallway -> Class Tower) to test scale and travel times.
-Guiding Wind: Implement visual pathfinding with NavigationServer3D and particles.
-AI (Echoes): Create 5 agents that transit from Dormitory to Classroom when server clock marks the time (Seamless appearance).
-Schedule: Implement simple JSON schedule resource.
-Phase 3: Game Feel & Feedback (Week 4)
-Objective: Playing feels satisfying and events are understandable.
-Combat Feedback: HP Bars, impact animations, Stunned state (Ragdoll).
-VFX & Shaders: Spell particles, Outline Shader for interaction.
-Basic UI: Login Screen, Dynamic Crosshair, Trace Feedback (Green color if gesture is good, red if bad).
-This Master GDD v3.3 document supersedes any previous version and serves as the single source of truth for prototype development.
