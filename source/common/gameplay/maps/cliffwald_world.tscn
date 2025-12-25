@@ -1,0 +1,51 @@
+[gd_scene load_steps=9 format=3 uid="uid://bhnkv8ma51g03"]
+
+[ext_resource type="Script" uid="uid://7mbux4mybta0" path="res://source/common/gameplay/maps/map.gd" id="1_map"]
+[ext_resource type="Script" path="res://source/server/world/components/schedule_manager.gd" id="3_schedule"]
+[ext_resource type="PackedScene" path="res://source/common/gameplay/maps/markers.tscn" id="4_markers"]
+[ext_resource type="PackedScene" uid="uid://npc_simple_v1" path="res://source/common/gameplay/characters/npc/npc_simple.tscn" id="5_npc"]
+[ext_resource type="PackedScene" uid="uid://castle_greybox_v1" path="res://source/common/gameplay/maps/castle_greybox.tscn" id="6_castle"]
+[ext_resource type="Script" path="res://source/server/world/components/simple_spawner.gd" id="7_spawner"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMat"]
+sky_top_color = Color(0.1, 0.2, 0.4, 1)
+sky_horizon_color = Color(0.5, 0.6, 0.7, 1)
+
+[sub_resource type="Sky" id="SkyRes"]
+sky_material = SubResource("SkyMat")
+
+[sub_resource type="Environment" id="Env"]
+background_mode = 2
+sky = SubResource("SkyRes")
+ambient_light_source = 3
+reflected_light_source = 2
+
+[node name="CliffwaldMap_Final" type="Node3D"]
+script = ExtResource("1_map")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Env")
+
+[node name="CastleGreybox" parent="." instance=ExtResource("6_castle")]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.5, -0.707107, 0.5, 0, 0.707107, 0.707107, -0.866025, -0.353553, 0.353553, 0, 50, 0)
+shadow_enabled = true
+
+[node name="SpawnPoint" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, 0)
+
+[node name="ScheduleManager" type="Node" parent="."]
+script = ExtResource("3_schedule")
+
+[node name="Markers" parent="." instance=ExtResource("4_markers")]
+
+[node name="MultiplayerSpawner" type="MultiplayerSpawner" parent="."]
+_spawnable_scenes = PackedStringArray("res://source/common/gameplay/characters/player/net_player.tscn")
+spawn_path = NodePath("..")
+
+[node name="SimpleSpawner" type="Node" parent="."]
+script = ExtResource("7_spawner")
+
+[node name="Professor_Potions" parent="." instance=ExtResource("5_npc")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, 0, 10)

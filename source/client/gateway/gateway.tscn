@@ -1,0 +1,154 @@
+[gd_scene load_steps=6 format=3 uid="uid://gateway_v3"]
+
+[ext_resource type="Script" path="res://source/client/gateway/gateway.gd" id="1_script"]
+[ext_resource type="Theme" path="res://source/client/ui/themes/theme_navy.tres" id="2_theme"]
+[ext_resource type="FontFile" path="res://assets/fonts/Atkinson_Hyperlegible/AtkinsonHyperlegible-Bold.ttf" id="3_font"]
+[ext_resource type="FontFile" path="res://assets/fonts/kenney_mini.ttf" id="4_font"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_Panel"]
+bg_color = Color(0.09, 0.1, 0.14, 0.94)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_left = 6
+corner_radius_bottom_right = 6
+
+[node name="Gateway" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="Center" type="CenterContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+layout_mode = 2
+custom_minimum_size = Vector2(520, 520)
+theme_override_styles/panel = SubResource("StyleBoxFlat_Panel")
+
+[node name="VBox" type="VBoxContainer" parent="Center/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 1
+custom_minimum_size = Vector2(480, 480)
+
+[node name="Title" type="Label" parent="Center/Panel/VBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("3_font")
+theme_override_font_sizes/font_size = 22
+text = "Gateway - Student Login"
+horizontal_alignment = 1
+
+[node name="Tabs" type="TabContainer" parent="Center/Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Login" type="Control" parent="Center/Panel/VBox/Tabs"]
+layout_mode = 2
+
+[node name="LoginVBox" type="VBoxContainer" parent="Center/Panel/VBox/Tabs/Login"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="UserLabel" type="Label" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Username"
+
+[node name="UserEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+
+[node name="PassLabel" type="Label" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Password"
+
+[node name="PassEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+secret = true
+
+[node name="LoginButton" type="Button" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+text = "Login"
+
+[node name="GuestButton" type="Button" parent="Center/Panel/VBox/Tabs/Login/LoginVBox"]
+layout_mode = 2
+text = "Guest Access"
+
+[node name="CreateAccount" type="Control" parent="Center/Panel/VBox/Tabs"]
+layout_mode = 2
+
+[node name="CreateVBox" type="VBoxContainer" parent="Center/Panel/VBox/Tabs/CreateAccount"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="NewUserLabel" type="Label" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "New Username"
+
+[node name="NewUserEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+
+[node name="NewPassLabel" type="Label" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Password"
+
+[node name="NewPassEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+secret = true
+
+[node name="RepeatLabel" type="Label" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Repeat Password"
+
+[node name="RepeatEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+secret = true
+
+[node name="CreateButton" type="Button" parent="Center/Panel/VBox/Tabs/CreateAccount/CreateVBox"]
+layout_mode = 2
+text = "Create Account"
+
+[node name="CharacterCreation" type="Control" parent="Center/Panel/VBox/Tabs"]
+layout_mode = 2
+
+[node name="CharVBox" type="VBoxContainer" parent="Center/Panel/VBox/Tabs/CharacterCreation"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="NameLabel" type="Label" parent="Center/Panel/VBox/Tabs/CharacterCreation/CharVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Character name"
+
+[node name="NameEdit" type="LineEdit" parent="Center/Panel/VBox/Tabs/CharacterCreation/CharVBox"]
+layout_mode = 2
+
+[node name="HouseLabel" type="Label" parent="Center/Panel/VBox/Tabs/CharacterCreation/CharVBox"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("4_font")
+text = "Select House"
+
+[node name="HouseOptions" type="OptionButton" parent="Center/Panel/VBox/Tabs/CharacterCreation/CharVBox"]
+layout_mode = 2
+
+[node name="CreateCharButton" type="Button" parent="Center/Panel/VBox/Tabs/CharacterCreation/CharVBox"]
+layout_mode = 2
+text = "Create Character"
+
+[node name="BackButton" type="Button" parent="Center/Panel/VBox"]
+layout_mode = 2
+text = "Back"
+visible = false
