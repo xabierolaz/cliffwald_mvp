@@ -12,16 +12,21 @@ config_version=5
 
 config/name="Tiny MMO (MVP)"
 config/version="0.1.0"
-run/main_scene="res://source/scenes/level/level.tscn"
+run/main_scene="res://source/common/main.tscn"
 config/features=PackedStringArray("4.5", "GL Compatibility")
 config/icon="res://icon.png"
 
 [autoload]
 
-Network="*res://source/scripts/network.gd"
-ItemDatabase="*res://source/scripts/item_database.gd"
-GestureManager="*res://source/scripts/gesture_manager.gd"
-TimeManager="*res://source/scripts/time_manager.gd"
+; Old MVP autoloads commented out to avoid conflict
+;Network="*res://source/scripts/network.gd"
+;ItemDatabase="*res://source/scripts/item_database.gd"
+;GestureManager="*res://source/scripts/gesture_manager.gd"
+;TimeManager="*res://source/scripts/time_manager.gd"
+
+; New Architecture Autoloads
+ClientState="*res://source/client/autoload/client_state.gd"
+ContentRegistry="*res://source/common/registry/content_registry.gd"
 
 [display]
 

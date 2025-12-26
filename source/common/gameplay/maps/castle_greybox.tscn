@@ -1,0 +1,932 @@
+[gd_scene load_steps=7 format=3 uid="uid://castle_greybox_v3"]
+
+[sub_resource type="StandardMaterial3D" id="Mat_Floor"]
+albedo_color = Color(0.15, 0.15, 0.15, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Wall"]
+albedo_color = Color(0.6, 0.6, 0.6, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Bed"]
+albedo_color = Color(0.8, 0.2, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Table"]
+albedo_color = Color(0.4, 0.2, 0.1, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Crafting"]
+albedo_color = Color(0.2, 0.8, 0.2, 1)
+
+[sub_resource type="StandardMaterial3D" id="Mat_Glass"]
+transparency = 1
+albedo_color = Color(0.4, 0.7, 1.0, 0.3)
+
+[sub_resource type="NavigationMesh" id="NavigationMesh_v1"]
+geometry_parsed_geometry_type = 1
+geometry_source_geometry_mode = 0
+agent_height = 1.8
+agent_radius = 0.4
+
+[node name="CastleGreybox" type="NavigationRegion3D"]
+navigation_mesh = SubResource("NavigationMesh_v1")
+
+[node name="CastleCSG" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Floor_9714" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, 0)
+
+size = Vector3(30, 1, 50)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_d447" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.0, -25.0)
+
+size = Vector3(30, 12, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_d99f" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 11.0, 25.0)
+
+size = Vector3(30, 12, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_e210" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.0, 11.0, 0)
+
+size = Vector3(1.0, 12, 50)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_e599" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0, 11.0, 0)
+
+size = Vector3(1.0, 12, 50)
+material = SubResource("Mat_Wall")
+
+[node name="Ceiling_adf6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 17.5, 0)
+
+size = Vector3(30, 1, 50)
+material = SubResource("Mat_Wall")
+
+[node name="Table_Ignis_36a1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8, 5.5, 0)
+
+size = Vector3(1.5, 1, 30)
+material = SubResource("Mat_Table")
+
+[node name="Table_Axiom_fd8b" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 5.5, 0)
+
+size = Vector3(1.5, 1, 30)
+material = SubResource("Mat_Table")
+
+[node name="Table_Vesper_6c5e" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 5.5, 0)
+
+size = Vector3(1.5, 1, 30)
+material = SubResource("Mat_Table")
+
+[node name="Table_Staff_9263" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, 5.5, 0)
+
+size = Vector3(1.5, 1, 30)
+material = SubResource("Mat_Table")
+
+[node name="WindowCut_3b10" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.0, -20)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_23a7" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 8.0, -20)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_a97d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.0, -10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_d90a" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 8.0, -10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_dcbc" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.0, 0)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_cf39" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 8.0, 0)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_a834" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.0, 10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_7709" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 8.0, 10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_fc93" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15, 8.0, 20)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_cfad" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15, 8.0, 20)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="Floor_56c7" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, -5.5, 10)
+
+size = Vector3(25, 1, 30)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_136b" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, -2.0, -5.0)
+
+size = Vector3(25, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_156a" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, -2.0, 25.0)
+
+size = Vector3(25, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_8ac8" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.5, -2.0, 10)
+
+size = Vector3(1.0, 6, 30)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_a5d0" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, -2.0, 10)
+
+size = Vector3(1.0, 6, 30)
+material = SubResource("Mat_Wall")
+
+[node name="Ceiling_6ced" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40, 1.5, 10)
+
+size = Vector3(25, 1, 30)
+material = SubResource("Mat_Wall")
+
+[node name="Bed_Ignis_Y1_01_8370" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_02_d9aa" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_03_87ba" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_04_baa7" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_05_acdf" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_06_8a8d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 32.0, -4.75, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y1_07_2775" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_01_9485" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_02_a6fc" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_03_edeb" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_04_6a11" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_05_b18a" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 36.0, -4.75, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_06_d6de" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y2_07_54d1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_01_5c15" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_02_eac6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_03_0517" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_04_921a" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 40.0, -4.75, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_05_6a94" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_06_3afa" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y3_07_0c91" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_01_cbaf" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_02_6f2b" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_03_093c" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 44.0, -4.75, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_04_1490" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, -4.75, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_05_6c80" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, -4.75, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_06_c4f0" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, -4.75, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Ignis_Y4_07_0077" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 48.0, -4.75, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="WindowCut_f23f" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.5, -2.0, 0)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_6412" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.5, -2.0, 10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_19b8" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 52.5, -2.0, 20)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="Floor_e434" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 14.5, 10)
+
+size = Vector3(20, 1, 20)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_6aa5" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 19.0, 0.0)
+
+size = Vector3(20, 8, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_bcfe" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 19.0, 20.0)
+
+size = Vector3(20, 8, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_80f8" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30.0, 19.0, 10)
+
+size = Vector3(1.0, 8, 20)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_6583" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50.0, 19.0, 10)
+
+size = Vector3(1.0, 8, 20)
+material = SubResource("Mat_Wall")
+
+[node name="Ceiling_e8b3" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 23.5, 10)
+
+size = Vector3(20, 1, 20)
+material = SubResource("Mat_Wall")
+
+[node name="Bed_Axiom_Y1_01_aff2" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_02_5899" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_03_0643" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_04_4aa2" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_05_7c5b" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_06_23b7" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -48.0, 15.25, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y1_07_581b" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_01_b3a0" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_02_9864" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_03_9071" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_04_2df6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_05_caed" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -44.0, 15.25, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_06_ea87" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y2_07_22b4" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_01_9fa0" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_02_3fe2" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_03_56f6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_04_0610" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40.0, 15.25, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_05_3b69" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_06_82bb" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y3_07_477f" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_01_94a6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_02_899d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 18.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_03_a593" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -36.0, 15.25, 22.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_04_f716" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.0, 15.25, 2.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_05_f784" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.0, 15.25, 6.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_06_2dd1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.0, 15.25, 10.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Axiom_Y4_07_2595" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -32.0, 15.25, 14.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="WindowCut_e795" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 18.0, 20)
+operation = 2
+size = Vector3(2.0, 3.0, 4.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_ec65" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -40, 18.0, 0)
+operation = 2
+size = Vector3(2.0, 3.0, 4.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_1990" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -30, 18.0, 10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="WindowCut_7a16" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 18.0, 10)
+operation = 2
+size = Vector3(4.0, 3.0, 2.0)
+material = SubResource("Mat_Glass")
+
+[node name="Floor_bca3" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.5, -40)
+
+size = Vector3(30, 1, 30)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_1a96" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, -55.0)
+
+size = Vector3(30, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_82e3" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, -25.0)
+
+size = Vector3(30, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_6d75" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.0, 8.0, -40)
+
+size = Vector3(1.0, 6, 30)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_5e60" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -15.0, 8.0, -40)
+
+size = Vector3(1.0, 6, 30)
+material = SubResource("Mat_Wall")
+
+[node name="Bed_Vesper_Y1_01_e19e" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -48.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_02_c006" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -44.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_03_3e37" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -40.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_04_0315" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -36.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_05_a8a1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -32.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_06_a7c5" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.0, 5.25, -28.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y1_07_11c8" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -48.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_01_1a78" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -44.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_02_af12" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -40.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_03_8aed" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -36.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_04_a95c" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -32.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_05_c21e" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.0, 5.25, -28.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_06_02f1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -48.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y2_07_49bf" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -44.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_01_a6e1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -40.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_02_c8e7" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -36.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_03_2c2c" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -32.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_04_ba13" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 5.25, -28.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_05_9a38" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -48.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_06_8637" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -44.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y3_07_5aa0" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -40.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_01_3c4f" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -36.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_02_ece1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -32.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_03_1685" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.0, 5.25, -28.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_04_9be6" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 5.25, -48.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_05_a5d1" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 5.25, -44.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_06_2ced" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 5.25, -40.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="Bed_Vesper_Y4_07_02dc" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.0, 5.25, -36.0)
+
+size = Vector3(1.0, 0.5, 2.0)
+material = SubResource("Mat_Bed")
+
+[node name="WindowCut_1ab9" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.0, -55)
+operation = 2
+size = Vector3(2.0, 3.0, 4.0)
+material = SubResource("Mat_Glass")
+
+[node name="DoorCut_375d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0, 7.0, -27.5)
+operation = 2
+size = Vector3(3.0, 4.0, 9.0)
+material = SubResource("Mat_Wall")
+
+[node name="DoorCut_82be" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20.0, 7.0, 5.0)
+operation = 2
+size = Vector3(14.0, 4.0, 3.0)
+material = SubResource("Mat_Wall")
+
+[node name="Ramp_Ignis_8c5d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 20, 0, 5)
+
+size = Vector3(10, 1, 15)
+material = SubResource("Mat_Floor")
+
+[node name="DoorCut_5771" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 27.5, -3.0, 5.0)
+operation = 2
+size = Vector3(5.0, 4.0, 3.0)
+material = SubResource("Mat_Wall")
+
+[node name="Floor_a48d" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, -5.5, -20)
+
+size = Vector3(15, 1, 15)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_4a2f" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, -2.0, -27.5)
+
+size = Vector3(15, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_aca4" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, -2.0, -12.5)
+
+size = Vector3(15, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_deaa" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 57.5, -2.0, -20)
+
+size = Vector3(1.0, 6, 15)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_9552" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42.5, -2.0, -20)
+
+size = Vector3(1.0, 6, 15)
+material = SubResource("Mat_Wall")
+
+[node name="Ceiling_4cff" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 50, 1.5, -20)
+
+size = Vector3(15, 1, 15)
+material = SubResource("Mat_Wall")
+
+[node name="DoorCut_d5d3" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 45.0, -3.0, -5.0)
+operation = 2
+size = Vector3(3.0, 4.0, 35.622776601683796)
+material = SubResource("Mat_Wall")
+
+[node name="Floor_dcef" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 14.5, -20)
+
+size = Vector3(15, 1, 15)
+material = SubResource("Mat_Floor")
+
+[node name="Wall_N_0306" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 18.0, -27.5)
+
+size = Vector3(15, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_S_2e40" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 18.0, -12.5)
+
+size = Vector3(15, 6, 1.0)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_E_bd24" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -42.5, 18.0, -20)
+
+size = Vector3(1.0, 6, 15)
+material = SubResource("Mat_Wall")
+
+[node name="Wall_W_70e3" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -57.5, 18.0, -20)
+
+size = Vector3(1.0, 6, 15)
+material = SubResource("Mat_Wall")
+
+[node name="Ceiling_1abf" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 21.5, -20)
+
+size = Vector3(15, 1, 15)
+material = SubResource("Mat_Wall")
+
+[node name="WindowCut_f5ac" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -50, 18.0, -27.5)
+operation = 2
+size = Vector3(2.0, 3.0, 4.0)
+material = SubResource("Mat_Glass")
+
+[node name="SecretTunnel_Floor_c0c9" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 0, -35)
+
+size = Vector3(40, 1, 4)
+material = SubResource("Mat_Floor")
+
+[node name="TunnelWall_1_ceeb" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 2, -33)
+
+size = Vector3(40, 4, 1)
+material = SubResource("Mat_Wall")
+
+[node name="TunnelWall_2_03dc" type="CSGBox3D" parent="CastleCSG"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 25, 2, -37)
+
+size = Vector3(40, 4, 1)
+material = SubResource("Mat_Wall")
